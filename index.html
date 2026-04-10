@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Ejecutivo - Elefante S.A.C.</title>
+    <title>ELEFANTE SAC - Business Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -11,103 +11,107 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
-        .card-exec { @apply bg-white rounded-xl shadow-sm border border-slate-200 p-5; }
-        .kpi-label { @apply text-[10px] font-bold text-slate-400 uppercase tracking-widest; }
-        .kpi-value { @apply text-2xl font-extrabold text-slate-800; }
-        #map { height: 300px; border-radius: 0.75rem; z-index: 1; }
+        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap');
+        body { font-family: 'Segoe UI', sans-serif; background-color: #0b1120; color: #f8fafc; }
+        .pbi-card { background: #1e293b; border: 1px solid #334155; border-radius: 4px; padding: 1rem; }
+        .pbi-label { color: #94a3b8; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+        .pbi-value { font-size: 1.5rem; font-weight: 800; color: #3b82f6; }
+        #map { height: 400px; width: 100%; filter: grayscale(1) invert(1) contrast(1.2); }
+        .table-exec th { font-size: 10px; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #334155; padding: 8px; }
+        .table-exec td { font-size: 11px; padding: 8px; border-bottom: 1px solid #1e293b; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 lg:p-6">
 
-    <div class="max-w-[1600px] mx-auto space-y-6">
+    <div class="max-w-[1700px] mx-auto space-y-4">
         
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-slate-900 p-6 rounded-2xl text-white">
-            <div>
-                <h1 class="text-xl font-bold flex items-center gap-2">
-                    <i data-lucide="shield-check" class="text-blue-400"></i> ELEFANTE S.A.C. | Reporte Gerencial
-                </h1>
-                <p class="text-slate-400 text-xs">Análisis de Rentabilidad Operativa y Financiera (VOLVO)</p>
+        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-600 rounded flex items-center justify-center text-white">
+                    <i data-lucide="activity"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold">ELEFANTE S.A.C. | <span class="text-blue-500 text-sm">Corporate Performance</span></h1>
+                    <p class="text-[10px] text-slate-500">Actualización en tiempo real desde Google Sheets</p>
+                </div>
             </div>
-            <div class="flex gap-4">
+            <div id="sync-info" class="flex items-center gap-4 text-[10px]">
                 <div class="text-right">
-                    <p class="text-[10px] text-slate-400 uppercase">Estado del Sistema</p>
-                    <p id="data-status" class="text-xs font-bold text-emerald-400 underline decoration-2">Sincronizado con Google Sheets</p>
+                    <p class="text-slate-500">OPERADOR LOGÍSTICO</p>
+                    <p class="font-bold text-white">VOLVO GROUP PERU</p>
                 </div>
-            </div>
-        </header>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="card-exec border-t-4 border-blue-600">
-                <p class="kpi-label">Margen Bruto Proyectado</p>
-                <h3 id="cfo-margin" class="kpi-value">$ 0.00</h3>
-                <div class="mt-2 text-[10px] flex justify-between">
-                    <span class="text-slate-400">Excluye Anulados</span>
-                    <span id="cfo-margin-perc" class="text-blue-600 font-bold">0% ROI</span>
-                </div>
-            </div>
-            <div class="card-exec border-t-4 border-amber-500">
-                <p class="kpi-label">Fuga por Anulaciones</p>
-                <h3 id="cfo-lost" class="kpi-value text-red-600">$ 0.00</h3>
-                <div class="mt-2 text-[10px] flex justify-between">
-                    <span class="text-slate-400 text-xs" id="cfo-lost-count">0 servicios</span>
-                    <span class="text-red-500 font-bold" id="cfo-lost-rate">0% Tasa</span>
-                </div>
-            </div>
-            <div class="card-exec border-t-4 border-emerald-500">
-                <p class="kpi-label">Recuperación Escolta</p>
-                <h3 id="cfo-escolta" class="kpi-value">$ 0.00</h3>
-                <p class="text-[10px] text-emerald-600 font-bold mt-2">Facturado vs Gasto Real</p>
-            </div>
-            <div class="card-exec border-t-4 border-indigo-500">
-                <p class="kpi-label">Eficiencia Lead Time</p>
-                <h3 id="coo-leadtime" class="kpi-value">0.0 Días</h3>
-                <p class="text-[10px] text-indigo-500 font-bold mt-2">Coti → Fin de Servicio</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="card-exec lg:col-span-1">
-                <h4 class="text-sm font-bold text-slate-800 mb-6 flex items-center gap-2">
-                    <i data-lucide="truck" class="w-4 h-4 text-blue-600"></i> DEPENDENCIA DE TERCEROS
-                </h4>
-                <canvas id="outsourcingChart" height="250"></canvas>
-                <div class="mt-4 p-3 bg-slate-50 rounded-lg text-[11px] text-slate-600 italic" id="coo-advice">
-                    Analizando dependencia...
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div class="pbi-card border-l-4 border-blue-500">
+                <p class="pbi-label">Cotizado Total</p>
+                <h3 id="v-total" class="pbi-value text-white">$ 0.0</h3>
+            </div>
+            <div class="pbi-card border-l-4 border-emerald-500">
+                <p class="pbi-label">Facturado (Cash Flow)</p>
+                <h3 id="v-facturado" class="pbi-value text-emerald-400">$ 0.0</h3>
+            </div>
+            <div class="pbi-card border-l-4 border-amber-500">
+                <p class="pbi-label">Pendiente (En Proceso)</p>
+                <h3 id="v-pendiente" class="pbi-value text-amber-400">$ 0.0</h3>
+            </div>
+            <div class="pbi-card border-l-4 border-red-500">
+                <p class="pbi-label">Pérdida (Anulados)</p>
+                <h3 id="v-anulado" class="pbi-value text-red-500">$ 0.0</h3>
+                <span id="p-anulado" class="text-[9px] font-bold text-red-800 bg-red-100 px-1 rounded">0%</span>
+            </div>
+            <div class="pbi-card border-l-4 border-indigo-500">
+                <p class="pbi-label">Lead Time Ciclo</p>
+                <h3 id="v-leadtime" class="pbi-value text-indigo-400">0.0d</h3>
+                <p class="text-[9px] text-slate-500">Coti a Entrega</p>
+            </div>
+            <div class="pbi-card border-l-4 border-slate-500">
+                <p class="pbi-label">Tiempo Gestión OC</p>
+                <h3 id="v-octime" class="pbi-value text-slate-300">0.0d</h3>
+                <p class="text-[9px] text-slate-500">Coti a Emisión OC</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            <div class="lg:col-span-8 pbi-card">
+                <h4 class="text-xs font-bold mb-4 uppercase text-slate-400">Curva de Crecimiento Mensual e Impacto de Anulaciones</h4>
+                <canvas id="growthChart" height="120"></canvas>
+            </div>
+            <div class="lg:col-span-4 pbi-card">
+                <h4 class="text-xs font-bold mb-4 uppercase text-slate-400">Mix de Flota: Propia vs Tercerizada</h4>
+                <canvas id="mixChart" height="200"></canvas>
+                <div id="fleet-insight" class="mt-4 p-2 bg-blue-900/20 border border-blue-800/50 rounded text-[10px] text-blue-300">
+                    Calculando ratio de dependencia...
                 </div>
             </div>
+        </div>
 
-            <div class="card-exec lg:col-span-2 relative">
-                <h4 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
-                    <i data-lucide="map-pin" class="w-4 h-4 text-red-500"></i> RUTAS CONCURRENTES Y ALERTAS LOGÍSTICAS
-                </h4>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            <div class="lg:col-span-4 pbi-card p-0 overflow-hidden min-h-[400px]">
                 <div id="map"></div>
-                <div class="absolute bottom-8 right-8 bg-white/90 p-3 rounded-lg border text-[10px] shadow-xl z-[1000]">
-                    <p class="font-bold border-b pb-1 mb-1">ALERTAS COO</p>
-                    <p id="falsos-fletes-count" class="text-red-600 font-bold uppercase tracking-tighter">0 Falsos Fletes Detectados</p>
+            </div>
+            <div class="lg:col-span-8 pbi-card overflow-hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-xs font-bold uppercase text-slate-400">Análisis de Rentabilidad por Operador y Ruta</h4>
+                    <button class="bg-blue-600 px-3 py-1 rounded text-[10px] font-bold">EXPORTAR DATA</button>
                 </div>
-            </div>
-        </div>
-
-        <div class="card-exec overflow-hidden p-0">
-            <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
-                <h4 class="text-xs font-bold text-slate-700 uppercase">Análisis CFO: Rentabilidad por Operador y Ruta</h4>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                    <thead class="bg-slate-50 text-slate-400 font-bold uppercase border-b">
-                        <tr>
-                            <th class="p-4">Operador</th>
-                            <th class="p-4">Ruta / Equipo</th>
-                            <th class="p-4">Flete ($)</th>
-                            <th class="p-4">Escolta ($)</th>
-                            <th class="p-4">Costo Est. ($)</th>
-                            <th class="p-4 text-right">Margen (%)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="exec-table" class="divide-y divide-slate-100"></tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left table-exec">
+                        <thead>
+                            <tr>
+                                <th>Operador</th>
+                                <th>Destino</th>
+                                <th>Maquinaria</th>
+                                <th>Flete ($)</th>
+                                <th>Escolta ($)</th>
+                                <th>Margen Est.</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="main-tbody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -116,138 +120,157 @@
         const sheetID = "1l9mtpMKH7gkkvILKUY9lYLK4PXh_bzpCidW7mGxnyro";
         const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv&gid=1850210641`;
 
-        async function init() {
+        async function initDashboard() {
             lucide.createIcons();
             Papa.parse(csvUrl, {
                 download: true,
                 header: true,
-                complete: (res) => renderDashboard(res.data),
-                error: (err) => console.error("Error cargando CSV:", err)
+                complete: (results) => {
+                    // LIMPIEZA DE HEADERS (Quitar \n y espacios extras)
+                    const cleanData = results.data.map(row => {
+                        const newRow = {};
+                        Object.keys(row).forEach(key => {
+                            const cleanKey = key.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+                            newRow[cleanKey] = row[key];
+                        });
+                        return newRow;
+                    });
+                    processExecutiveData(cleanData);
+                }
             });
         }
 
-        function cleanNum(val) {
-            if (!val) return 0;
-            return parseFloat(val.toString().replace(/[^0-9.-]+/g,"")) || 0;
-        }
+        function processExecutiveData(data) {
+            let kpis = { 
+                total: 0, fact: 0, pend: 0, anul: 0, 
+                c_anul: 0, c_valid: 0, escolta: 0,
+                leadDays: [], ocDays: [] 
+            };
+            let monthly = {};
+            let fleet = { elefante: 0, terceros: 0 };
+            let routes = {};
 
-        function renderDashboard(data) {
-            // Normalizar nombres de columnas (quitar \n y espacios)
-            const cleanData = data.map(row => {
-                const newRow = {};
-                Object.keys(row).forEach(key => {
-                    const cleanKey = key.replace(/\s+/g, ' ').trim();
-                    newRow[cleanKey] = row[key];
-                });
-                return newRow;
-            });
-
-            let fin = { rev: 0, lost: 0, nulCount: 0, escolta: 0, totalValid: 0 };
-            let ops = { leadTime: [], elefante: 0, terceros: 0, falsos: 0 };
-            let routeMap = {};
-
-            cleanData.forEach(row => {
-                const flete = cleanNum(row['FLETE']);
-                const escolta = cleanNum(row['ESCOLTA']);
-                const estado = (row['ESTADO'] || '').toUpperCase();
+            data.forEach(row => {
+                const monto = parseFloat(row['FLETE']?.replace(/[^0-9.-]+/g,"")) || 0;
+                const esc = parseFloat(row['ESCOLTA']?.replace(/[^0-9.-]+/g,"")) || 0;
+                const estado = row['ESTADO']?.trim().toUpperCase();
+                const mes = row['MES FECHA COTI'] || 'Sin Mes';
                 const trans = (row['RAZON SOCIAL - TRANSPORTE'] || '').toUpperCase();
-                
-                // Análisis CFO
+
+                // Embudos y KPIs Financieros
                 if (estado === 'ANULADO') {
-                    fin.lost += flete;
-                    fin.nulCount++;
+                    kpis.anul += monto;
+                    kpis.c_anul++;
                 } else {
-                    fin.rev += flete;
-                    fin.escolta += escolta;
-                    fin.totalValid++;
+                    kpis.total += monto;
+                    kpis.c_valid++;
+                    kpis.escolta += esc;
+                    if (estado === 'FACTURADO') kpis.fact += monto;
+                    else kpis.pend += monto;
 
-                    // Análisis COO
-                    if (trans.includes('ELEFANTE')) ops.elefante++;
-                    else ops.terceros++;
+                    // Lead Times (Diferencia de fechas)
+                    const fCoti = new Date(row['FECHA COTIZACION']);
+                    const fFin = new Date(row['FECHA FIN SERVICIO']);
+                    const fOc = new Date(row['FECHA OC']);
 
-                    // Lead Time
-                    const d1 = new Date(row['FECHA COTIZACION']);
-                    const d2 = new Date(row['FECHA FIN SERVICIO']);
-                    if (!isNaN(d1) && !isNaN(d2)) {
-                        ops.leadTime.push((d2 - d1) / (1000 * 60 * 60 * 24));
-                    }
+                    if (!isNaN(fCoti) && !isNaN(fFin)) kpis.leadDays.push((fFin - fCoti) / 86400000);
+                    if (!isNaN(fCoti) && !isNaN(fOc)) kpis.ocDays.push((fOc - fCoti) / 86400000);
+
+                    // Mix Flota
+                    if (trans.includes('ELEFANTE')) fleet.elefante++;
+                    else if (trans !== "") fleet.terceros++;
                 }
 
-                // Detector de Falsos Fletes
-                if ((row['TIPO DE SERVICIO'] || '').includes('FALSO')) ops.falsos++;
+                // Agrupación Mensual
+                if (!monthly[mes]) monthly[mes] = { rev: 0, nul: 0 };
+                if (estado === 'ANULADO') monthly[mes].nul += monto;
+                else monthly[mes].rev += monto;
+
+                // Agrupación Rutas para Mapa
+                const dest = row['DESTINO_2'] || row['DESTINO'];
+                if (dest && estado !== 'ANULADO') {
+                    routes[dest] = (routes[dest] || 0) + 1;
+                }
             });
 
-            // Actualizar UI
-            document.getElementById('cfo-margin').innerText = `$ ${fin.rev.toLocaleString()}`;
-            document.getElementById('cfo-lost').innerText = `$ ${fin.lost.toLocaleString()}`;
-            document.getElementById('cfo-lost-count').innerText = `${fin.nulCount} servicios perdidos`;
-            document.getElementById('cfo-lost-rate').innerText = `${((fin.nulCount / cleanData.length) * 100).toFixed(1)}% Tasa`;
-            document.getElementById('cfo-escolta').innerText = `$ ${fin.escolta.toLocaleString()}`;
+            // Inyectar KPIs
+            document.getElementById('v-total').innerText = `$${(kpis.total/1000).toFixed(1)}K`;
+            document.getElementById('v-facturado').innerText = `$${(kpis.fact/1000).toFixed(1)}K`;
+            document.getElementById('v-pendiente').innerText = `$${(kpis.pend/1000).toFixed(1)}K`;
+            document.getElementById('v-anulado').innerText = `$${(kpis.anul/1000).toFixed(1)}K`;
+            document.getElementById('p-anulado').innerText = `${((kpis.c_anul/data.length)*100).toFixed(1)}%`;
             
-            const avgLead = ops.leadTime.reduce((a,b) => a+b, 0) / ops.leadTime.length;
-            document.getElementById('coo-leadtime').innerText = `${avgLead.toFixed(1)} Días`;
-            document.getElementById('falsos-fletes-count').innerText = `${ops.falsos} Falsos Fletes Detectados`;
+            const avgLead = kpis.leadDays.reduce((a,b)=>a+b,0)/kpis.leadDays.length || 0;
+            const avgOc = kpis.ocDays.reduce((a,b)=>a+b,0)/kpis.ocDays.length || 0;
+            document.getElementById('v-leadtime').innerText = `${avgLead.toFixed(1)}d`;
+            document.getElementById('v-octime').innerText = `${avgOc.toFixed(1)}d`;
 
-            // Tabla Exec
-            const tbody = document.getElementById('exec-table');
-            tbody.innerHTML = cleanData.filter(r => r.ESTADO !== 'ANULADO').slice(-10).map(r => {
-                const isThird = !r['RAZON SOCIAL - TRANSPORTE']?.includes('ELEFANTE');
-                const margin = isThird ? 20 : 85; // Estimación CFO
-                return `
-                    <tr class="hover:bg-slate-50">
-                        <td class="p-4 font-bold text-slate-700">${r['RAZON SOCIAL - TRANSPORTE'] || 'S/N'}</td>
-                        <td class="p-4 text-slate-500">${r['DESTINO']}<br><span class="text-[9px] font-bold text-blue-600">${r['MODELO']}</span></td>
-                        <td class="p-4 font-bold">$ ${r['FLETE']}</td>
-                        <td class="p-4 text-slate-400">$ ${r['ESCOLTA']}</td>
-                        <td class="p-4">$ ${(cleanNum(r['FLETE']) * (isThird ? 0.8 : 0.15)).toFixed(0)}</td>
-                        <td class="p-4 text-right font-bold ${margin < 30 ? 'text-orange-500' : 'text-emerald-500'}">${margin}%</td>
-                    </tr>
-                `;
-            }).join('');
-
-            renderCharts(ops);
-            renderMap();
+            renderCharts(monthly, fleet);
+            renderMap(routes);
+            renderTable(data);
         }
 
-        function renderCharts(ops) {
-            const ctx = document.getElementById('outsourcingChart').getContext('2d');
-            new Chart(ctx, {
+        function renderCharts(m, f) {
+            // Growth Chart
+            new Chart(document.getElementById('growthChart'), {
+                type: 'line',
+                data: {
+                    labels: Object.keys(m),
+                    datasets: [
+                        { label: 'Facturación Real', data: Object.values(m).map(x=>x.rev), borderColor: '#3b82f6', fill: true, backgroundColor: '#3b82f610' },
+                        { label: 'Pérdida (Anulados)', data: Object.values(m).map(x=>x.nul), borderColor: '#ef4444', borderDash: [5,5] }
+                    ]
+                },
+                options: { responsive: true, color: '#94a3b8', scales: { y: { grid: { color: '#1e293b' } } } }
+            });
+
+            // Mix Chart
+            new Chart(document.getElementById('mixChart'), {
                 type: 'doughnut',
                 data: {
-                    labels: ['Propia (Elefante)', 'Terceros (Outsourcing)'],
-                    datasets: [{
-                        data: [ops.elefante, ops.terceros],
-                        backgroundColor: ['#1d4ed8', '#f59e0b'],
-                        borderWidth: 0
-                    }]
+                    labels: ['Propia (ELEFANTE)', 'Terceros'],
+                    datasets: [{ data: [f.elefante, f.terceros], backgroundColor: ['#3b82f6', '#1e293b'], borderWidth: 2, borderColor: '#0b1120' }]
                 },
-                options: { cutout: '80%', plugins: { legend: { position: 'bottom' } } }
+                options: { cutout: '80%', plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
             });
-
-            // Consejo COO
-            const ratio = (ops.terceros / (ops.elefante + ops.terceros)) * 100;
-            document.getElementById('coo-advice').innerText = ratio > 60 
-                ? "ALERTA: Dependencia de terceros > 60%. Evaluar adquisición de nuevas camas bajas para rutas de Cusco/Juliaca."
-                : "Ratio saludable: La flota propia cubre la mayoría de servicios críticos.";
         }
 
-        function renderMap() {
-            const map = L.map('map', { zoomControl: false }).setView([-12.046, -77.042], 6);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
+        function renderMap(routes) {
+            const map = L.map('map', { zoomControl: false }).setView([-12.04, -77.02], 5);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
             
-            const routes = [
-                {n: 'Lima - Cusco', c: [-13.53, -71.96], v: 7400},
-                {n: 'Lima - Juliaca', c: [-15.49, -70.12], v: 4100},
-                {n: 'Lima - Arequipa', c: [-16.40, -71.53], v: 3800}
-            ];
+            const points = {
+                'LIMA': [-12.04, -77.02],
+                'CUSCO': [-13.53, -71.96],
+                'JULIACA': [-15.49, -70.12],
+                'AREQUIPA': [-16.40, -71.53],
+                'TRUJILLO': [-8.11, -79.03]
+            };
 
-            routes.forEach(r => {
-                L.circleMarker(r.c, { radius: 10, color: '#1d4ed8', fillOpacity: 0.8 })
-                 .addTo(map).bindPopup(`<b>${r.n}</b><br>Flete Promedio: $${r.v}`);
+            Object.keys(routes).forEach(r => {
+                const city = Object.keys(points).find(p => r.toUpperCase().includes(p));
+                if (city) {
+                    L.circleMarker(points[city], { radius: routes[r]*2, color: '#3b82f6' }).addTo(map);
+                }
             });
         }
 
-        window.onload = init;
+        function renderTable(data) {
+            const tbody = document.getElementById('main-tbody');
+            tbody.innerHTML = data.filter(r => r.ESTADO !== 'ANULADO').slice(-12).reverse().map(r => `
+                <tr>
+                    <td class="font-bold text-slate-300">${r['RAZON SOCIAL - TRANSPORTE'] || 'ELEFANTE'}</td>
+                    <td>${r['DESTINO']}</td>
+                    <td class="text-blue-500 font-bold">${r['MODELO']}</td>
+                    <td class="font-bold">$ ${r['FLETE']}</td>
+                    <td class="text-slate-500">$ ${r['ESCOLTA']}</td>
+                    <td><span class="text-emerald-500 font-bold">${r['RAZON SOCIAL - TRANSPORTE']?.includes('ELEFANTE') ? '85%' : '15%'}</span></td>
+                    <td><span class="px-2 py-0.5 rounded text-[8px] font-bold ${r.ESTADO === 'FACTURADO' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}">${r.ESTADO}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        window.onload = initDashboard;
     </script>
 </body>
 </html>
