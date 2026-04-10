@@ -33,7 +33,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-bold tracking-tight">ELEFANTE S.A.C.</h1>
-                    <p class="text-xs text-blue-400 font-semibold">Dashboard Comercial y Operativo</p>
+                    <p class="text-xs text-blue-400 font-semibold">Dashboard Comercial y Operativo (Datos Duros)</p>
                 </div>
             </div>
             
@@ -107,7 +107,7 @@
             
             <div class="lg:col-span-2 pbi-card overflow-hidden flex flex-col">
                 <div class="flex justify-between items-center mb-4">
-                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Detalle Operativo (Últimos Registros)</h4>
+                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Detalle Operativo (Datos Duros)</h4>
                 </div>
                 <div class="overflow-x-auto flex-grow">
                     <table class="w-full text-left table-exec">
@@ -129,6 +129,7 @@
     </div>
 
     <script>
+        // URL directa a tu CSV
         const sheetID = "1l9mtpMKH7gkkvILKUY9lYLK4PXh_bzpCidW7mGxnyro";
         const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv&gid=1850210641`;
 
@@ -143,18 +144,21 @@
             Papa.parse(csvUrl, {
                 download: true,
                 header: true,
+                skipEmptyLines: true,
                 complete: (results) => {
-                    // LIMPIEZA EXTREMA: Ignorar filas vacías y normalizar llaves
+                    // LIMPIEZA ESTRICTA: Leer tal cual está en el CSV, sin inventar nada.
                     globalData = results.data
                         .map(row => {
                             const newRow = {};
                             Object.keys(row).forEach(key => {
-                                const cleanKey = key.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+                                // Limpiar nombres de columnas rebeldes (saltos de línea)
+                                const cleanKey = key.replace(/[\n\r]/g, ' ').replace(/\s+/g, ' ').trim();
                                 newRow[cleanKey] = row[key];
                             });
                             return newRow;
                         })
-                        .filter(row => row['# COT ELEFANTE'] && row['# COT ELEFANTE'].trim() !== '' && row['FLETE'] && row['FLETE'].trim() !== '');
+                        // FILTRO DURO: Solo registros que tengan número de cotización
+                        .filter(row => row['# COT ELEFANTE'] && row['# COT ELEFANTE'].toString().trim() !== '');
                     
                     extractFiltersAndInitialize();
                 }
@@ -166,27 +170,36 @@
             const months = new Set();
 
             globalData.forEach(row => {
-                const dateStr = row['FECHA COTIZACION'];
-                if (dateStr) {
-                    const dateObj = new Date(dateStr);
-                    if (!isNaN(dateObj)) {
-                        years.add(dateObj.getFullYear());
-                        // Usar el mes de la fecha en lugar de la columna texto para mayor precisión
-                        const mesNombre = dateObj.toLocaleString('es-ES', { month: 'long' });
-                        months.add(mesNombre.charAt(0).toUpperCase() + mesNombre.slice(1));
-                    }
+                // EXTRACCIÓN DURA: Leer el texto literal, nada de "new Date()"
+                const fechaCoti = (row['FECHA COTIZACION'] || '').trim();
+                const mesLiteral = (row['MES FECHA COTI'] || '').trim();
+
+                // Extraer el año directamente del string (ej. "2025-12-16" -> "2025")
+                if (fechaCoti.length >= 4) {
+                    const year = fechaCoti.substring(0, 4);
+                    if (!isNaN(year)) years.add(year);
+                }
+
+                // Usar el mes EXACTO que escribieron en la columna de Google Sheets
+                if (mesLiteral) {
+                    // Capitalizar la primera letra para que se vea bien
+                    const mesFormateado = mesLiteral.charAt(0).toUpperCase() + mesLiteral.slice(1).toLowerCase();
+                    months.add(mesFormateado);
                 }
             });
 
             const yearSelect = document.getElementById('filter-year');
             const monthSelect = document.getElementById('filter-month');
 
+            // Poblar selectores SOLO con los datos que realmente existen
             Array.from(years).sort().forEach(y => yearSelect.add(new Option(y, y)));
-            // Ordenar meses cronológicamente
+            
+            // Orden lógico de meses si existen
             const mesesOrden = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            Array.from(months).sort((a, b) => mesesOrden.indexOf(a) - mesesOrden.indexOf(b)).forEach(m => monthSelect.add(new Option(m, m)));
+            Array.from(months)
+                .sort((a, b) => mesesOrden.indexOf(a) - mesesOrden.indexOf(b))
+                .forEach(m => monthSelect.add(new Option(m, m)));
 
-            // Event Listeners
             yearSelect.addEventListener('change', updateDashboard);
             monthSelect.addEventListener('change', updateDashboard);
 
@@ -194,32 +207,29 @@
             updateDashboard();
         }
 
-        function cleanNum(val) {
-            if (!val) return 0;
-            return parseFloat(val.toString().replace(/[^0-9.-]+/g,"")) || 0;
-        }
-
         function updateDashboard() {
             const selectedYear = document.getElementById('filter-year').value;
             const selectedMonth = document.getElementById('filter-month').value;
 
             const filteredData = globalData.filter(row => {
-                const dateStr = row['FECHA COTIZACION'];
-                if (!dateStr) return false;
-                const d = new Date(dateStr);
-                if (isNaN(d)) return false;
-
-                const rowYear = d.getFullYear().toString();
-                const rowMonth = d.toLocaleString('es-ES', { month: 'long' });
-                const rowMonthCap = rowMonth.charAt(0).toUpperCase() + rowMonth.slice(1);
+                const fechaCoti = (row['FECHA COTIZACION'] || '').trim();
+                const mesLiteral = (row['MES FECHA COTI'] || '').trim();
+                
+                const rowYear = fechaCoti.length >= 4 ? fechaCoti.substring(0, 4) : '';
+                const rowMonth = mesLiteral.charAt(0).toUpperCase() + mesLiteral.slice(1).toLowerCase();
 
                 const matchYear = selectedYear === 'ALL' || rowYear === selectedYear;
-                const matchMonth = selectedMonth === 'ALL' || rowMonthCap === selectedMonth;
+                const matchMonth = selectedMonth === 'ALL' || rowMonth === selectedMonth;
 
                 return matchYear && matchMonth;
             });
 
             processDataForRender(filteredData);
+        }
+
+        function cleanNum(val) {
+            if (!val) return 0;
+            return parseFloat(val.toString().replace(/[^0-9.-]+/g, "")) || 0;
         }
 
         function processDataForRender(data) {
@@ -229,18 +239,19 @@
             let routes = {};
 
             data.forEach(row => {
-                const monto = cleanNum(row['FLETE']);
+                const fleteRaw = row['FLETE'];
+                const monto = cleanNum(fleteRaw);
                 const estado = (row['ESTADO'] || '').trim().toUpperCase();
                 const trans = (row['RAZON SOCIAL - TRANSPORTE'] || '').toUpperCase();
                 
-                // Extraer mes de la fecha para agrupar en el gráfico
-                let d = new Date(row['FECHA COTIZACION']);
-                let mesGrafico = !isNaN(d) ? d.toLocaleString('es-ES', { month: 'short' }).toUpperCase() : 'N/A';
+                // Agrupación para la gráfica basada estrictamente en la columna MES FECHA COTI
+                const mesGrafico = (row['MES FECHA COTI'] || 'S/M').trim().toUpperCase();
 
                 if (estado === 'ANULADO') {
                     kpis.anul += monto;
                     kpis.c_anul++;
                 } else {
+                    // Solo sumar fletes de operaciones válidas
                     kpis.total += monto;
                     if (estado === 'FACTURADO') {
                         kpis.fact += monto;
@@ -249,14 +260,16 @@
                         kpis.pend += monto;
                     }
 
-                    // Lead Time
-                    const fCoti = new Date(row['FECHA COTIZACION']);
-                    const fFin = new Date(row['FECHA FIN SERVICIO']);
-                    if (!isNaN(fCoti) && !isNaN(fFin)) {
-                        kpis.leadDays.push((fFin - fCoti) / 86400000); // Ms a días
+                    // Lead time (único lugar donde usamos fechas de JS, solo para restar días)
+                    if (row['FECHA COTIZACION'] && row['FECHA FIN SERVICIO']) {
+                        const d1 = new Date(row['FECHA COTIZACION']);
+                        const d2 = new Date(row['FECHA FIN SERVICIO']);
+                        if (!isNaN(d1) && !isNaN(d2) && d2 >= d1) {
+                            kpis.leadDays.push((d2 - d1) / 86400000);
+                        }
                     }
 
-                    // Mix Flota
+                    // Flota
                     if (trans.includes('ELEFANTE')) fleet.elefante++;
                     else if (trans !== "") fleet.terceros++;
 
@@ -265,17 +278,20 @@
                     if (dest) routes[dest] = (routes[dest] || 0) + 1;
                 }
 
-                // Acumular para gráfica mensual
+                // Poblar datos de la gráfica (sin inventar meses)
                 if (!monthly[mesGrafico]) monthly[mesGrafico] = { rev: 0, nul: 0 };
-                if (estado === 'ANULADO') monthly[mesGrafico].nul += monto;
-                else monthly[mesGrafico].rev += monto;
+                if (estado === 'ANULADO') {
+                    monthly[mesGrafico].nul += monto;
+                } else {
+                    monthly[mesGrafico].rev += monto;
+                }
             });
 
-            // Actualizar UI KPIs
-            document.getElementById('v-total').innerText = `$ ${kpis.total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            document.getElementById('v-facturado').innerText = `$ ${kpis.fact.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            document.getElementById('v-pendiente').innerText = `$ ${kpis.pend.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            document.getElementById('v-anulado').innerText = `$ ${kpis.anul.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            // UI Updates
+            document.getElementById('v-total').innerText = `$ ${kpis.total.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            document.getElementById('v-facturado').innerText = `$ ${kpis.fact.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            document.getElementById('v-pendiente').innerText = `$ ${kpis.pend.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            document.getElementById('v-anulado').innerText = `$ ${kpis.anul.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
             
             document.getElementById('v-facturado-count').innerText = `${kpis.c_fact} facturas emitidas`;
             const tasaAnulacion = data.length > 0 ? ((kpis.c_anul / data.length) * 100).toFixed(1) : 0;
@@ -290,7 +306,6 @@
         }
 
         function renderCharts(monthlyData, fleet) {
-            // Destruir instancias previas para evitar superposición al filtrar
             if (growthChartInstance) growthChartInstance.destroy();
             if (mixChartInstance) mixChartInstance.destroy();
 
@@ -298,7 +313,7 @@
             growthChartInstance = new Chart(ctxGrowth, {
                 type: 'bar',
                 data: {
-                    labels: Object.keys(monthlyData),
+                    labels: Object.keys(monthlyData), // Muestra SOLO los meses que existen
                     datasets: [
                         { label: 'Facturación Válida', data: Object.values(monthlyData).map(x=>x.rev), backgroundColor: '#3b82f6', borderRadius: 4 },
                         { label: 'Pérdida (Anulados)', data: Object.values(monthlyData).map(x=>x.nul), backgroundColor: '#ef4444', borderRadius: 4 }
@@ -334,12 +349,10 @@
 
         function updateMap(routes) {
             markersLayer.clearLayers();
-            
             const points = {
                 'LIMA': [-12.04, -77.02], 'LURIN': [-12.27, -76.87], 'STA ANITA': [-12.04, -76.95],
                 'CUSCO': [-13.53, -71.96], 'JULIACA': [-15.49, -70.12], 'AREQUIPA': [-16.40, -71.53]
             };
-
             Object.keys(routes).forEach(r => {
                 const rUpper = r.toUpperCase();
                 Object.keys(points).forEach(city => {
@@ -354,7 +367,6 @@
 
         function renderTable(data) {
             const tbody = document.getElementById('main-tbody');
-            // Tomar los últimos 15 servicios válidos
             const tableData = data.filter(r => r.ESTADO !== 'ANULADO').slice(-15).reverse();
             
             if (tableData.length === 0) {
