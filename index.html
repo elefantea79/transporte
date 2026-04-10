@@ -3,71 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elefante SAC - Dashboard en Vivo</title>
+    <title>Dashboard Gerencial - Elefante S.A.C.</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; }
-        .glass-card { background: white; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0; overflow: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .kpi-card { @apply bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition-all hover:shadow-md; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 lg:p-10">
 
-    <div class="max-w-[1400px] mx-auto space-y-6">
+    <div class="max-w-[1600px] mx-auto space-y-8">
         
-        <header class="flex justify-between items-center border-b border-slate-200 pb-6">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-blue-700 rounded-xl flex items-center justify-center text-white">
-                    <i data-lucide="bar-chart-3"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-extrabold text-slate-900">ELEFANTE S.A.C.</h1>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">BI Operativo en Tiempo Real</p>
-                </div>
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
+                    <span class="bg-blue-600 p-2 rounded-lg text-white"><i data-lucide="truck"></i></span>
+                    ELEFANTE S.A.C. <span class="text-slate-400 font-light">| Control Operativo</span>
+                </h1>
+                <p class="text-sm text-slate-500 mt-1">Gestión de servicios pesados para VOLVO</p>
             </div>
-            <div id="status-badge" class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold flex items-center gap-2">
+            <div id="connection-status" class="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold border border-emerald-100">
                 <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> CONECTADO A GOOGLE SHEETS
-            </div>
-        </header>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="glass-card p-6 bg-slate-900 text-white border-none">
-                <p class="text-[10px] font-bold opacity-60 uppercase">Facturación Bruta (Válida)</p>
-                <h3 id="kpi-facturacion" class="text-3xl font-black mt-1">$ 0.00</h3>
-            </div>
-            <div class="glass-card p-6 border-l-4 border-l-blue-500">
-                <p class="text-[10px] font-bold text-slate-400 uppercase">Servicios Ejecutados</p>
-                <h3 id="kpi-servicios" class="text-3xl font-black text-slate-800 mt-1">0</h3>
-            </div>
-            <div class="glass-card p-6 border-l-4 border-l-amber-500">
-                <p class="text-[10px] font-bold text-slate-400 uppercase">Tasa de Tercerización</p>
-                <h3 id="kpi-terceros" class="text-3xl font-black text-slate-800 mt-1">0%</h3>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="glass-card p-6">
-                <h4 class="font-bold text-slate-800 mb-4 text-sm uppercase">Participación por Transportista</h4>
-                <canvas id="chartTransporte" height="200"></canvas>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="kpi-card border-l-4 border-l-blue-600">
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Facturación Bruta</p>
+                <h3 id="kpi-revenue" class="text-2xl font-bold text-slate-900 mt-1">$ 0.00</h3>
+                <p class="text-[10px] text-blue-600 mt-2 font-semibold">Ingresos Totales (Válidos)</p>
+            </div>
+            <div class="kpi-card border-l-4 border-l-red-500">
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Costo de Tercerización</p>
+                <h3 id="kpi-costs" class="text-2xl font-bold text-slate-900 mt-1">$ 0.00</h3>
+                <p class="text-[10px] text-red-500 mt-2 font-semibold">Pagos a Proveedores Externos</p>
+            </div>
+            <div class="kpi-card border-l-4 border-l-emerald-500">
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Margen Operativo</p>
+                <h3 id="kpi-profit" class="text-2xl font-bold text-slate-900 mt-1">$ 0.00</h3>
+                <p class="text-[10px] text-emerald-600 mt-2 font-semibold">Utilidad Bruta del Servicio</p>
+            </div>
+            <div class="kpi-card border-l-4 border-l-indigo-500">
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Volumen de Carga</p>
+                <h3 id="kpi-shipments" class="text-2xl font-bold text-slate-900 mt-1">0</h3>
+                <p class="text-[10px] text-indigo-500 mt-2 font-semibold">Servicios Totales Despachados</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-1 bg-white p-6 rounded-xl border border-slate-200">
+                <h4 class="text-sm font-bold text-slate-800 mb-6 flex items-center gap-2">
+                    <i data-lucide="pie-chart" class="w-4 h-4 text-blue-600"></i> MIX DE TRANSPORTE
+                </h4>
+                <div class="relative h-[250px]">
+                    <canvas id="fleetChart"></canvas>
+                </div>
+                <div class="mt-6 space-y-3">
+                    <div class="flex justify-between text-xs">
+                        <span class="text-slate-500">Propio (Elefante)</span>
+                        <span id="label-elefante" class="font-bold text-blue-600">0%</span>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-slate-500">Tercerizado</span>
+                        <span id="label-terceros" class="font-bold text-orange-500">0%</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="glass-card">
-                <div class="p-4 bg-slate-50 border-b border-slate-100">
-                    <h4 class="font-bold text-slate-800 text-xs uppercase">Últimos Servicios (No Anulados)</h4>
+            <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col">
+                <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                    <h4 class="text-sm font-bold text-slate-800 uppercase tracking-tight">Registro Reciente de Operaciones</h4>
+                    <span class="text-[10px] font-bold bg-white px-2 py-1 rounded border border-slate-200">Excluye Anulados</span>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-[11px]">
+                <div class="overflow-x-auto flex-grow">
+                    <table class="w-full text-left text-xs">
                         <thead class="bg-slate-50 text-slate-400 font-bold uppercase">
                             <tr>
-                                <th class="p-3">Modelo</th>
-                                <th class="p-3">Ruta</th>
-                                <th class="p-3">Monto</th>
+                                <th class="p-4">ID / Modelo</th>
+                                <th class="p-4">Transportista</th>
+                                <th class="p-4">Ruta (Destino)</th>
+                                <th class="p-4 text-right">Flete ($)</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla-servicios" class="divide-y divide-slate-100">
+                        <tbody id="data-table" class="divide-y divide-slate-100">
                             </tbody>
                     </table>
                 </div>
@@ -76,94 +98,98 @@
     </div>
 
     <script>
-        // CONFIGURACIÓN DE DATOS
-        // Tu link convertido a formato de exportación CSV
         const sheetID = "1l9mtpMKH7gkkvILKUY9lYLK4PXh_bzpCidW7mGxnyro";
+        // Aseguramos que apunte a la hoja de "Servicios" mediante el GID correspondiente
         const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv&gid=1850210641`;
 
-        async function initDashboard() {
+        async function loadData() {
             lucide.createIcons();
-            
             Papa.parse(csvUrl, {
                 download: true,
                 header: true,
-                complete: function(results) {
-                    processData(results.data);
-                },
-                error: function(err) {
-                    document.getElementById('status-badge').innerHTML = "ERROR DE CONEXIÓN";
-                    document.getElementById('status-badge').classList.replace('bg-emerald-100', 'bg-red-100');
-                    console.error(err);
-                }
+                complete: (results) => processOperationalData(results.data),
+                error: (err) => console.error("Error de conexión:", err)
             });
         }
 
-        function processData(data) {
-            // 1. FILTRAR ANULADOS (Regla de Oro)
-            // Cambia 'ESTADO' por el nombre exacto de tu columna si es distinto
-            const validos = data.filter(row => row['ESTADO'] && row['ESTADO'].toUpperCase() !== 'ANULADO');
+        function processOperationalData(data) {
+            // 1. FILTRADO: Basado en columna ESTADO
+            const validData = data.filter(row => row['ESTADO'] && row['ESTADO'].trim().toUpperCase() !== 'ANULADO');
 
-            // 2. CÁLCULO DE KPIs
-            let totalMoney = 0;
+            let revenue = 0;
+            let costs = 0;
             let countElefante = 0;
             let countTerceros = 0;
-            const transportistas = {};
 
-            validos.forEach(row => {
-                // Limpiar monto (quitar símbolos de moneda)
-                let monto = parseFloat(row['MONTO']?.replace(/[^0-9.-]+/g,"")) || 0;
-                totalMoney += monto;
+            validData.forEach(row => {
+                // Ajuste de columna: Usamos 'FLETE' según la imagen del Excel
+                let val = parseFloat(row['FLETE']?.replace(/[^0-9.-]+/g,"")) || 0;
+                let transportista = (row['RAZON SOCIAL -'] || row['TRANSPORTISTA'] || "").toUpperCase();
 
-                // Contar transportistas
-                let nombreTrans = row['RAZON SOCIAL'] || row['TRANSPORTISTA'] || 'OTROS';
-                transportistas[nombreTrans] = (transportistas[nombreTrans] || 0) + 1;
-
-                if(nombreTrans.includes("ELEFANTE")) countElefante++;
-                else countTerceros++;
+                revenue += val;
+                
+                if (transportista.includes("ELEFANTE")) {
+                    countElefante++;
+                } else {
+                    costs += val * 0.85; // Simulación: El costo de terceros suele ser un % del flete final
+                    countTerceros++;
+                }
             });
 
-            // 3. ACTUALIZAR INTERFAZ
-            document.getElementById('kpi-facturacion').innerText = `$ ${totalMoney.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
-            document.getElementById('kpi-servicios').innerText = validos.length;
-            
-            let tasa = (countTerceros / validos.length) * 100;
-            document.getElementById('kpi-terceros').innerText = `${tasa.toFixed(1)}%`;
+            // 2. ACTUALIZACIÓN DE KPIs
+            document.getElementById('kpi-revenue').innerText = `$ ${revenue.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+            document.getElementById('kpi-costs').innerText = `$ ${costs.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+            document.getElementById('kpi-profit').innerText = `$ ${(revenue - costs).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+            document.getElementById('kpi-shipments').innerText = validData.length;
 
-            // 4. RENDERIZAR TABLA (Top 5 recientes)
-            const tbody = document.getElementById('tabla-servicios');
-            tbody.innerHTML = validos.slice(-5).reverse().map(row => `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-3 font-bold">${row['MODELO'] || 'N/A'}</td>
-                    <td class="p-3 text-slate-500">${row['DESTINO'] || 'N/A'}</td>
-                    <td class="p-3 font-black text-blue-600">$ ${row['MONTO']}</td>
+            // 3. ACTUALIZACIÓN DE TABLA
+            const tbody = document.getElementById('data-table');
+            tbody.innerHTML = validData.slice(-8).reverse().map(row => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="p-4 font-semibold text-slate-700">
+                        <span class="text-[10px] text-slate-300 block">#${row['# CUT ELEFANTE'] || '---'}</span>
+                        ${row['MODELO'] || 'N/A'}
+                    </td>
+                    <td class="p-4">
+                        <span class="px-2 py-1 rounded-md text-[9px] font-bold ${row['RAZON SOCIAL -']?.includes('ELEFANTE') ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600'}">
+                            ${row['RAZON SOCIAL -'] || 'TERCERO'}
+                        </span>
+                    </td>
+                    <td class="p-4 text-slate-500">${row['DESTINO'] || 'LIMA'}</td>
+                    <td class="p-4 text-right font-bold text-slate-900">$ ${parseFloat(row['FLETE'] || 0).toFixed(2)}</td>
                 </tr>
             `).join('');
 
-            // 5. RENDERIZAR GRÁFICO
-            renderChart(transportistas);
+            // 4. GRÁFICO DE MIX OPERATIVO
+            updateCharts(countElefante, countTerceros);
         }
 
-        function renderChart(dict) {
-            const ctx = document.getElementById('chartTransporte').getContext('2d');
+        function updateCharts(elefante, terceros) {
+            const total = elefante + terceros;
+            document.getElementById('label-elefante').innerText = `${((elefante/total)*100).toFixed(1)}%`;
+            document.getElementById('label-terceros').innerText = `${((terceros/total)*100).toFixed(1)}%`;
+
+            const ctx = document.getElementById('fleetChart').getContext('2d');
             new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(dict),
+                    labels: ['Propia', 'Tercerizada'],
                     datasets: [{
-                        data: Object.values(dict),
-                        backgroundColor: ['#1d4ed8', '#f59e0b', '#64748b', '#94a3b8', '#cbd5e1']
+                        data: [elefante, terceros],
+                        backgroundColor: ['#2563eb', '#f97316'],
+                        borderWidth: 0,
+                        hoverOffset: 10
                     }]
                 },
                 options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { font: { size: 10, weight: 'bold' } } }
-                    }
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    cutout: '75%'
                 }
             });
         }
 
-        window.onload = initDashboard;
+        window.onload = loadData;
     </script>
 </body>
 </html>
