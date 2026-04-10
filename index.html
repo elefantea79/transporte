@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elefante SAC - Dashboard en Vivo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; }
+        .glass-card { background: white; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0; overflow: hidden; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-[1400px] mx-auto space-y-6">
+        
+        <header class="flex justify-between items-center border-b border-slate-200 pb-6">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-blue-700 rounded-xl flex items-center justify-center text-white">
+                    <i data-lucide="bar-chart-3"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold text-slate-900">ELEFANTE S.A.C.</h1>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">BI Operativo en Tiempo Real</p>
+                </div>
+            </div>
+            <div id="status-badge" class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold flex items-center gap-2">
+                <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> CONECTADO A GOOGLE SHEETS
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="glass-card p-6 bg-slate-900 text-white border-none">
+                <p class="text-[10px] font-bold opacity-60 uppercase">Facturación Bruta (Válida)</p>
+                <h3 id="kpi-facturacion" class="text-3xl font-black mt-1">$ 0.00</h3>
+            </div>
+            <div class="glass-card p-6 border-l-4 border-l-blue-500">
+                <p class="text-[10px] font-bold text-slate-400 uppercase">Servicios Ejecutados</p>
+                <h3 id="kpi-servicios" class="text-3xl font-black text-slate-800 mt-1">0</h3>
+            </div>
+            <div class="glass-card p-6 border-l-4 border-l-amber-500">
+                <p class="text-[10px] font-bold text-slate-400 uppercase">Tasa de Tercerización</p>
+                <h3 id="kpi-terceros" class="text-3xl font-black text-slate-800 mt-1">0%</h3>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="glass-card p-6">
+                <h4 class="font-bold text-slate-800 mb-4 text-sm uppercase">Participación por Transportista</h4>
+                <canvas id="chartTransporte" height="200"></canvas>
+            </div>
+
+            <div class="glass-card">
+                <div class="p-4 bg-slate-50 border-b border-slate-100">
+                    <h4 class="font-bold text-slate-800 text-xs uppercase">Últimos Servicios (No Anulados)</h4>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-[11px]">
+                        <thead class="bg-slate-50 text-slate-400 font-bold uppercase">
+                            <tr>
+                                <th class="p-3">Modelo</th>
+                                <th class="p-3">Ruta</th>
+                                <th class="p-3">Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-servicios" class="divide-y divide-slate-100">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURACIÓN DE DATOS
+        // Tu link convertido a formato de exportación CSV
+        const sheetID = "1l9mtpMKH7gkkvILKUY9lYLK4PXh_bzpCidW7mGxnyro";
+        const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv&gid=1850210641`;
+
+        async function initDashboard() {
+            lucide.createIcons();
+            
+            Papa.parse(csvUrl, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    processData(results.data);
+                },
+                error: function(err) {
+                    document.getElementById('status-badge').innerHTML = "ERROR DE CONEXIÓN";
+                    document.getElementById('status-badge').classList.replace('bg-emerald-100', 'bg-red-100');
+                    console.error(err);
+                }
+            });
+        }
+
+        function processData(data) {
+            // 1. FILTRAR ANULADOS (Regla de Oro)
+            // Cambia 'ESTADO' por el nombre exacto de tu columna si es distinto
+            const validos = data.filter(row => row['ESTADO'] && row['ESTADO'].toUpperCase() !== 'ANULADO');
+
+            // 2. CÁLCULO DE KPIs
+            let totalMoney = 0;
+            let countElefante = 0;
+            let countTerceros = 0;
+            const transportistas = {};
+
+            validos.forEach(row => {
+                // Limpiar monto (quitar símbolos de moneda)
+                let monto = parseFloat(row['MONTO']?.replace(/[^0-9.-]+/g,"")) || 0;
+                totalMoney += monto;
+
+                // Contar transportistas
+                let nombreTrans = row['RAZON SOCIAL'] || row['TRANSPORTISTA'] || 'OTROS';
+                transportistas[nombreTrans] = (transportistas[nombreTrans] || 0) + 1;
+
+                if(nombreTrans.includes("ELEFANTE")) countElefante++;
+                else countTerceros++;
+            });
+
+            // 3. ACTUALIZAR INTERFAZ
+            document.getElementById('kpi-facturacion').innerText = `$ ${totalMoney.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+            document.getElementById('kpi-servicios').innerText = validos.length;
+            
+            let tasa = (countTerceros / validos.length) * 100;
+            document.getElementById('kpi-terceros').innerText = `${tasa.toFixed(1)}%`;
+
+            // 4. RENDERIZAR TABLA (Top 5 recientes)
+            const tbody = document.getElementById('tabla-servicios');
+            tbody.innerHTML = validos.slice(-5).reverse().map(row => `
+                <tr class="hover:bg-slate-50">
+                    <td class="p-3 font-bold">${row['MODELO'] || 'N/A'}</td>
+                    <td class="p-3 text-slate-500">${row['DESTINO'] || 'N/A'}</td>
+                    <td class="p-3 font-black text-blue-600">$ ${row['MONTO']}</td>
+                </tr>
+            `).join('');
+
+            // 5. RENDERIZAR GRÁFICO
+            renderChart(transportistas);
+        }
+
+        function renderChart(dict) {
+            const ctx = document.getElementById('chartTransporte').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(dict),
+                    datasets: [{
+                        data: Object.values(dict),
+                        backgroundColor: ['#1d4ed8', '#f59e0b', '#64748b', '#94a3b8', '#cbd5e1']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 10, weight: 'bold' } } }
+                    }
+                }
+            });
+        }
+
+        window.onload = initDashboard;
+    </script>
+</body>
+</html>
