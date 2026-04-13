@@ -34,26 +34,26 @@
                         <p class="text-slate-400 font-medium">Gestión de Transporte y Logística Especializada</p>
                     </div>
                     <div class="bg-blue-600 px-4 py-2 rounded-lg font-bold text-sm tracking-widest uppercase">
-                        Reporte Operativo
+                        Datos Validados
                     </div>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="border-l-4 border-blue-500 pl-4">
                         <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Cotizaciones Q1</p>
-                        <p class="text-3xl font-black">$ 183,305</p>
+                        <p class="text-3xl font-black">$ 150,005</p>
                     </div>
                     <div class="border-l-4 border-emerald-500 pl-4">
-                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Ejecutado Q1</p>
-                        <p class="text-3xl font-black text-emerald-400">$ 141,905</p>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Ejecutado Q1 (Fact+OC)</p>
+                        <p class="text-3xl font-black text-emerald-400">$ 141,805</p>
                     </div>
                     <div class="border-l-4 border-amber-500 pl-4">
-                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">En Proceso Marzo</p>
-                        <p class="text-3xl font-black text-amber-400">$ 23,967</p>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Por Confirmar (Marzo)</p>
+                        <p class="text-3xl font-black text-amber-400">$ 8,200</p>
                     </div>
                     <div class="border-l-4 border-red-500 pl-4">
-                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Anulado Marzo</p>
-                        <p class="text-3xl font-black text-red-400">$ 26,800</p>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Anulado (Marzo)</p>
+                        <p class="text-3xl font-black text-red-400">$ 50,700</p>
                     </div>
                 </div>
             </div>
@@ -65,8 +65,8 @@
             <div class="lg:col-span-2 kpi-card">
                 <div class="flex justify-between items-center mb-8">
                     <div>
-                        <h3 class="font-extrabold text-slate-800 uppercase tracking-tight text-sm">Evolución Mensual de Servicios</h3>
-                        <p class="text-[10px] text-slate-500 font-medium">Tendencia aplicada a Cotizaciones | Peso % sobre Anulados</p>
+                        <h3 class="font-extrabold text-slate-800 uppercase tracking-tight text-sm">Análisis Comparativo Mensual</h3>
+                        <p class="text-[10px] text-slate-500 font-medium">Valores en miles (k) | Peso % del anulado vs Cotizaciones del mes</p>
                     </div>
                     <div class="hidden md:flex gap-4 text-[9px] font-black uppercase">
                         <div class="flex items-center gap-1"><span class="w-2 h-2 bg-slate-200 rounded-sm"></span> Cotización</div>
@@ -131,8 +131,8 @@
                     </table>
                 </div>
                 <div class="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center">
-                    <div class="text-[9px] font-bold text-slate-400 uppercase">Eficiencia de Flota</div>
-                    <div class="text-xs font-black text-blue-600">58% Flota Propia</div>
+                    <div class="text-[9px] font-bold text-slate-400 uppercase">Cotización Marzo</div>
+                    <div class="text-xs font-black text-blue-600">$ 51,875</div>
                 </div>
             </div>
         </div>
@@ -149,9 +149,15 @@
         const ctx = document.getElementById('detailedMonthlyChart').getContext('2d');
 
         const months = ['ENERO', 'FEBRERO', 'MARZO'];
-        const dataCotizaciones = [53.0, 54.5, 75.8]; 
-        const dataFacturado = [35.2, 38.4, 51.8]; 
-        const dataAnulado = [39.8, 38.0, 26.8];
+        
+        // Datos calculados según el Filtro: Fecha No Nula y Estado != 'ANULADO'
+        const dataCotizaciones = [35.2, 63.0, 51.9]; 
+        
+        // Datos facturados reales
+        const dataFacturado = [35.2, 63.0, 24.6]; 
+        
+        // Datos Anulados excluidos de la cotización
+        const dataAnulado = [21.6, 56.3, 50.7];
 
         new Chart(ctx, {
             type: 'bar',
@@ -208,10 +214,12 @@
                         formatter: (value, context) => {
                             if (context.dataset.type === 'line') return null;
                             const datasetLabel = context.dataset.label;
-                            let label = value + 'k';
+                            let label = value.toFixed(1) + 'k';
+                            
+                            // Mostrar el porcentaje de lo Anulado respecto a las Cotizaciones Válidas del mes
                             if (datasetLabel === 'Anulado') {
-                                const totalGestionado = context.chart.data.datasets[0].data[context.dataIndex] + value;
-                                const percent = ((value / totalGestionado) * 100).toFixed(1);
+                                const cotizacionMes = context.chart.data.datasets[0].data[context.dataIndex];
+                                const percent = ((value / cotizacionMes) * 100).toFixed(1);
                                 return `${label}\n(${percent}%)`;
                             }
                             return label;
@@ -224,7 +232,7 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-                        max: 100,
+                        max: 90, // Ajustado para el nuevo pico máximo de 63k
                         ticks: { font: { size: 10, weight: 'bold' }, callback: v => v + 'k' },
                         grid: { borderDash: [4, 4], drawBorder: false }
                     },
