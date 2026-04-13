@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Transporte Elefante SAC - Modelo Estrella</title>
+    <title>Dashboard Transporte Elefante SAC - Q1 2026</title>
     <script src="https://cdn.tailwindcss.com/"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
@@ -13,90 +13,102 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
         .kpi-card { background: white; border-radius: 12px; padding: 1.5rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        #map { height: 350px; border-radius: 12px; border: 1px solid #e2e8f0; z-index: 10;}
-        
-        /* Dropdowns Custom */
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
-        
-        /* Tabla Custom */
+        #map { height: 350px; border-radius: 12px; border: 1px solid #e2e8f0; z-index: 10; }
+        .badge-elefante { background: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px; font-weight: 800; font-size: 9px; }
+        .badge-tercero { background: #f1f5f9; color: #475569; padding: 2px 6px; border-radius: 4px; font-weight: 800; font-size: 9px; }
         th { cursor: pointer; transition: background 0.2s; }
         th:hover { background: #f8fafc; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <div class="max-w-[1600px] mx-auto space-y-6">
+    <div class="max-w-7xl mx-auto space-y-8">
         
-        <!-- ENCABEZADO Y FILTROS ESTRELLA -->
+        <!-- ENCABEZADO Y FILTROS -->
+        <!-- NOTA: Se cambió overflow-hidden a overflow-visible para que los menús puedan desplegarse hacia abajo -->
         <div class="bg-slate-900 rounded-2xl p-6 md:p-8 text-white shadow-xl relative overflow-visible">
             <div class="relative z-20">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                <div class="flex justify-between items-start mb-6">
                     <div>
-                        <h1 class="text-3xl font-extrabold tracking-tight">Consolidado Trimestral</h1>
+                        <h1 class="text-3xl font-extrabold tracking-tight">Consolidado Trimestral Q1 2026</h1>
                         <p class="text-slate-400 font-medium">Gestión de Transporte y Logística Especializada</p>
                     </div>
                     
-                    <!-- FILTROS (AÑO Y MES) -->
-                    <div class="flex flex-wrap items-center gap-3 bg-slate-800/50 p-2 rounded-xl border border-slate-700/50 backdrop-blur-sm">
-                        <span class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Filtros Globales:</span>
-                        
+                    <!-- NUEVO: MENÚS DESPLEGABLES -->
+                    <div class="flex gap-3">
                         <!-- Dropdown Año -->
                         <div class="relative dropdown-container">
-                            <button onclick="toggleDropdown('yearDropdown')" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-bold border border-slate-600 transition-colors shadow-sm">
-                                Año <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <button onclick="toggleDropdown('yearDropdown')" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-bold border border-slate-700 transition-colors">
+                                Año: 2026 
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-                            <div id="yearDropdown" class="hidden absolute left-0 mt-2 w-48 rounded-xl shadow-2xl bg-white border border-slate-200 text-slate-800 z-[100]">
-                                <div id="yearList" class="max-h-48 overflow-y-auto p-2 space-y-1 custom-scrollbar"></div>
+                            <div id="yearDropdown" class="hidden absolute right-0 mt-2 w-40 rounded-xl shadow-2xl bg-white border border-slate-200 text-slate-800 z-50">
+                                <div class="p-2 space-y-1">
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 cursor-pointer rounded-lg">
+                                        <input type="checkbox" checked class="w-4 h-4 rounded text-blue-600">
+                                        <span class="text-sm font-bold">2026</span>
+                                    </label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 cursor-pointer rounded-lg">
+                                        <input type="checkbox" class="w-4 h-4 rounded text-blue-600">
+                                        <span class="text-sm font-bold">2025</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Dropdown Mes -->
+                        <!-- Dropdown Meses -->
                         <div class="relative dropdown-container">
-                            <button onclick="toggleDropdown('monthDropdown')" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-blue-500/30 transition-colors">
-                                Meses <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <button onclick="toggleDropdown('monthDropdown')" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg transition-colors">
+                                Filtrar Meses 
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-                            <div id="monthDropdown" class="hidden absolute right-0 mt-2 w-56 rounded-xl shadow-2xl bg-white border border-slate-200 text-slate-800 z-[100]">
+                            <div id="monthDropdown" class="hidden absolute right-0 mt-2 w-56 rounded-xl shadow-2xl bg-white border border-slate-200 text-slate-800 z-50">
                                 <div class="p-3 border-b border-slate-100 bg-slate-50 rounded-t-xl">
-                                    <label class="flex items-center gap-3 cursor-pointer group">
-                                        <input type="checkbox" id="selectAllMonths" checked onclick="handleSelectAll('month-cb', this)" class="w-4 h-4 rounded text-blue-600">
-                                        <span class="text-sm font-bold group-hover:text-blue-600">Seleccionar Todos</span>
+                                    <label class="flex items-center gap-3 cursor-pointer">
+                                        <input type="checkbox" checked onclick="toggleAllMonths(this)" class="w-4 h-4 rounded text-blue-600">
+                                        <span class="text-sm font-bold">Seleccionar Todos</span>
                                     </label>
                                 </div>
-                                <div id="monthList" class="max-h-64 overflow-y-auto p-2 space-y-1 custom-scrollbar"></div>
+                                <div class="p-2 space-y-1 max-h-60 overflow-y-auto">
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 cursor-pointer rounded-lg">
+                                        <input type="checkbox" checked class="month-cb w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Enero</span>
+                                    </label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 cursor-pointer rounded-lg">
+                                        <input type="checkbox" checked class="month-cb w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Febrero</span>
+                                    </label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 cursor-pointer rounded-lg">
+                                        <input type="checkbox" checked class="month-cb w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Marzo</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- KPIs DINÁMICOS -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="border-l-4 border-blue-500 pl-4">
-                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Cotizaciones Acumuladas</p>
-                        <p id="kpi-cotizaciones" class="text-3xl font-black">$ 0</p>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Cotizaciones Q1</p>
+                        <p class="text-3xl font-black">$ 150,005</p>
                     </div>
                     <div class="border-l-4 border-emerald-500 pl-4">
-                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Ejecutado (Fact+OC)</p>
-                        <p id="kpi-ejecutado" class="text-3xl font-black text-emerald-400">$ 0</p>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Ejecutado Q1 (Fact+OC)</p>
+                        <p class="text-3xl font-black text-emerald-400">$ 141,805</p>
                     </div>
                     <div class="border-l-4 border-amber-500 pl-4">
-                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Por Confirmar</p>
-                        <p id="kpi-confirmar" class="text-3xl font-black text-amber-400">$ 0</p>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Por Confirmar (Marzo)</p>
+                        <p class="text-3xl font-black text-amber-400">$ 8,200</p>
                     </div>
                     <div class="border-l-4 border-red-500 pl-4">
-                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Anulado Total</p>
-                        <p id="kpi-anulado" class="text-3xl font-black text-red-400">$ 0</p>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Anulado (Marzo)</p>
+                        <p class="text-3xl font-black text-red-400">$ 50,700</p>
                     </div>
                 </div>
             </div>
             <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full -mr-20 -mt-20 blur-3xl z-0 pointer-events-none"></div>
         </div>
 
-        <!-- SECCIÓN 1: GRÁFICOS PRINCIPALES -->
+        <!-- GRÁFICOS INTACTOS -->
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            
-            <!-- GRÁFICO 1: MENSUAL -->
             <div class="lg:col-span-3 kpi-card">
                 <div class="flex justify-between items-center mb-6">
                     <div>
@@ -114,12 +126,11 @@
                 </div>
             </div>
 
-            <!-- GRÁFICO 2: PARETO -->
             <div class="lg:col-span-2 kpi-card flex flex-col">
                 <div class="flex justify-between items-start mb-4">
                     <div>
                         <h3 class="font-extrabold text-slate-800 uppercase tracking-tight text-sm">Dependencia de Flota (Pareto)</h3>
-                        <p class="text-[10px] text-slate-500 font-medium">Monto por Contratista y % Acumulado</p>
+                        <p class="text-[10px] text-slate-500 font-medium">Monto por Contratista y % Acumulado (Q1)</p>
                     </div>
                     <div class="flex items-center gap-1 text-[9px] font-black uppercase text-red-600 bg-red-50 px-2 py-1 rounded">
                         <span class="w-2 h-2 bg-red-500 rounded-full"></span> LÍMITE 80%
@@ -128,21 +139,26 @@
                 <div class="flex-grow relative" style="min-height: 300px;">
                     <canvas id="paretoChart"></canvas>
                 </div>
+                <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center">
+                    <div class="text-[10px] font-bold text-slate-500 leading-tight">
+                        * Pasa el cursor sobre las barras para ver <br> Viajes, Monto y % de Representación.
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- SECCIÓN 2: TABLA Y MAPA (AÑADIDOS DE LA 2DA IMAGEN) -->
+        <!-- TABLA Y MAPA AGREGADOS JUNTOS -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- TABLA COMPARATIVA -->
+            <!-- TABLA DE TARIFAS -->
             <div class="lg:col-span-7 kpi-card overflow-hidden p-0 flex flex-col">
                 <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
                     <h3 class="font-bold text-slate-800 text-sm uppercase tracking-tight">Comparación de Tarifas 2025 vs 2026</h3>
-                    <span class="text-[9px] font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded">ORDENABLE POR COLUMNA</span>
+                    <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">ORDENABLE POR COLUMNA</span>
                 </div>
-                <div class="overflow-x-auto flex-grow custom-scrollbar">
-                    <table class="w-full text-[11px] text-left whitespace-nowrap" id="tarifasTable">
-                        <thead class="bg-slate-100 text-slate-500 uppercase font-black sticky top-0">
+                <div class="overflow-x-auto flex-grow">
+                    <table class="w-full text-[11px] text-left" id="tarifasTable">
+                        <thead class="bg-slate-100 text-slate-500 uppercase font-black">
                             <tr>
                                 <th class="p-3 border-b" onclick="sortTable(0)">Destino ↑↓</th>
                                 <th class="p-3 border-b" onclick="sortTable(1)">Modelo ↑↓</th>
@@ -151,18 +167,20 @@
                                 <th class="p-3 border-b text-center text-emerald-600">% Var ↑↓</th>
                             </tr>
                         </thead>
-                        <tbody id="tableBody" class="divide-y divide-slate-100 font-medium text-slate-700">
-                            <!-- Filas dinámicas -->
+                        <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+                            <tr><td class="p-3">LIMA - PASCO</td><td class="p-3">L120H</td><td class="p-3 text-right">$ 4,100</td><td class="p-3 text-right font-bold">$ 4,500</td><td class="p-3 text-center font-bold text-emerald-600">+9.7%</td></tr>
+                            <tr><td class="p-3">LIMA - HUAMACHUCO</td><td class="p-3">L150H</td><td class="p-3 text-right">$ 3,850</td><td class="p-3 text-right font-bold">$ 4,000</td><td class="p-3 text-center font-bold text-emerald-600">+3.9%</td></tr>
+                            <tr><td class="p-3">STA ANITA - LURIN</td><td class="p-3">EC360</td><td class="p-3 text-right">$ 550</td><td class="p-3 text-right font-bold">$ 600</td><td class="p-3 text-center font-bold text-emerald-600">+9.1%</td></tr>
+                            <tr><td class="p-3">TVC - TVS</td><td class="p-3">EC380</td><td class="p-3 text-right">$ 660</td><td class="p-3 text-right font-bold">$ 710</td><td class="p-3 text-center font-bold text-emerald-600">+7.6%</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- MAPA DE DESTINOS -->
+            <!-- MAPA -->
             <div class="lg:col-span-5 kpi-card">
-                <h3 class="font-extrabold text-slate-800 uppercase tracking-tight text-sm mb-3">Mapa de Cobertura de Servicios</h3>
+                <h3 class="font-extrabold text-slate-800 mb-4 uppercase tracking-tight text-sm">Zonas de Operación Logística Q1</h3>
                 <div id="map"></div>
-                <p class="text-[10px] text-slate-400 mt-3 font-bold uppercase tracking-wider text-center" id="map-footer">Destinos filtrados activos</p>
             </div>
         </div>
     </div>
@@ -171,293 +189,115 @@
         Chart.register(ChartDataLabels);
 
         // ==========================================
-        // DATOS MOCKUP (Simulación de Google Sheets)
-        // Estructura ideal para cruzar todas las vistas
+        // CÓDIGO INTACTO DE TUS GRÁFICOS
         // ==========================================
-        const allData =[
-            // Registros Enero 2026
-            { year: 2026, mes: 0, cotizacion: 35.2, facturado: 35.2, anulado: 21.6, contractor: 'ELEFANTE', monto: 35200, viajes: 15, destino: 'LIMA - PASCO', modelo: 'L120H', t2025: 4100, t2026: 4500, lat: -10.684, lng: -76.256 },
-            { year: 2026, mes: 0, cotizacion: 0, facturado: 0, anulado: 0, contractor: 'MECHE', monto: 12000, viajes: 4, destino: 'LIMA - HUAMACHUCO', modelo: 'L150H', t2025: 3850, t2026: 4000, lat: -7.812, lng: -78.049 },
-            // Registros Febrero 2026
-            { year: 2026, mes: 1, cotizacion: 63.0, facturado: 63.0, anulado: 56.3, contractor: 'ELEFANTE', monto: 44800, viajes: 20, destino: 'STA ANITA - LURIN', modelo: 'EC360', t2025: 550, t2026: 600, lat: -12.277, lng: -76.871 },
-            { year: 2026, mes: 1, cotizacion: 0, facturado: 0, anulado: 0, contractor: 'HUERE', monto: 8000, viajes: 4, destino: 'TVC - TVS', modelo: 'EC380', t2025: 660, t2026: 710, lat: -14.835, lng: -74.932 },
-            // Registros Marzo 2026
-            { year: 2026, mes: 2, cotizacion: 51.9, facturado: 24.6, anulado: 50.7, contractor: 'MECHE', monto: 8000, viajes: 8, destino: 'LIMA - PASCO', modelo: 'L120H', t2025: 4100, t2026: 4500, lat: -10.684, lng: -76.256 },
-            { year: 2026, mes: 2, cotizacion: 0, facturado: 0, anulado: 0, contractor: 'PORTILLA', monto: 4000, viajes: 3, destino: 'LIMA - CHIMBOTE', modelo: 'L150H', t2025: 2800, t2026: 3000, lat: -9.07, lng: -78.59 },
-            { year: 2026, mes: 2, cotizacion: 0, facturado: 0, anulado: 0, contractor: 'R&J', monto: 3000, viajes: 2, destino: 'LIMA - ICA', modelo: 'EC360', t2025: 1500, t2026: 1600, lat: -14.06, lng: -75.72 },
-            { year: 2026, mes: 2, cotizacion: 0, facturado: 0, anulado: 0, contractor: 'CRISTO M.', monto: 2000, viajes: 1, destino: 'LIMA - PIURA', modelo: 'EC380', t2025: 6000, t2026: 6500, lat: -5.19, lng: -80.62 },
-            // Registros 2025 (Solo para demostrar el filtro dinámico)
-            { year: 2025, mes: 11, cotizacion: 40.5, facturado: 40.5, anulado: 10.0, contractor: 'ELEFANTE', monto: 40500, viajes: 18, destino: 'LIMA - AREQUIPA', modelo: 'L120H', t2025: 3500, t2026: 3500, lat: -16.40, lng: -71.53 }
-        ];
+        const ctxMonthly = document.getElementById('monthlyChart').getContext('2d');
+        const months =['ENERO', 'FEBRERO', 'MARZO'];
+        const dataCotizaciones =[35.2, 63.0, 51.9]; 
+        const dataFacturado =[35.2, 63.0, 24.6]; 
+        const dataAnulado =[21.6, 56.3, 50.7];
 
-        const monthNames =["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];
-        let filteredData =[];
-        let monthlyChart, paretoChart, map;
-
-        // ==========================================
-        // INICIALIZACIÓN
-        // ==========================================
-        function init() {
-            buildFilters();
-            initCharts();
-            initMap();
-            applyFilters(); // Arranca el modelo estrella
-        }
-
-        // ==========================================
-        // LÓGICA DE FILTROS DINÁMICOS
-        // ==========================================
-        function buildFilters() {
-            // Extraer solo Años y Meses que existen en los datos
-            const uniqueYears =[...new Set(allData.map(d => d.year))].sort((a, b) => b - a);
-            const uniqueMonths = [...new Set(allData.map(d => d.mes))].sort((a, b) => a - b);
-
-            // Renderizar Checkboxes de Año
-            document.getElementById('yearList').innerHTML = uniqueYears.map(y => `
-                <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer">
-                    <input type="checkbox" checked value="${y}" class="year-cb w-4 h-4 rounded text-blue-600 focus:ring-blue-500" onchange="applyFilters()">
-                    <span class="text-sm font-semibold text-slate-700">${y}</span>
-                </label>
-            `).join('');
-
-            // Renderizar Checkboxes de Meses (Solo los registrados)
-            document.getElementById('monthList').innerHTML = uniqueMonths.map(m => `
-                <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer">
-                    <input type="checkbox" checked value="${m}" class="month-cb w-4 h-4 rounded text-blue-600 focus:ring-blue-500" onchange="applyFilters()">
-                    <span class="text-sm font-semibold text-slate-700">${monthNames[m]}</span>
-                </label>
-            `).join('');
-        }
-
-        function applyFilters() {
-            const selectedYears = Array.from(document.querySelectorAll('.year-cb:checked')).map(cb => parseInt(cb.value));
-            const selectedMonths = Array.from(document.querySelectorAll('.month-cb:checked')).map(cb => parseInt(cb.value));
-
-            // Cruzar datos
-            filteredData = allData.filter(d => selectedYears.includes(d.year) && selectedMonths.includes(d.mes));
-            updateDashboard();
-        }
-
-        // ==========================================
-        // ACTUALIZACIÓN VISUAL (MODELO ESTRELLA)
-        // ==========================================
-        function updateDashboard() {
-            // 1. Calcular KPIs Globales
-            let cotizaciones = 0, facturado = 0, anulado = 0;
-            filteredData.forEach(d => {
-                cotizaciones += d.cotizacion * 1000;
-                facturado += d.facturado * 1000;
-                anulado += d.anulado * 1000;
-            });
-            const porConfirmar = cotizaciones - facturado;
-
-            document.getElementById('kpi-cotizaciones').innerText = `$ ${(cotizaciones).toLocaleString('en-US')}`;
-            document.getElementById('kpi-ejecutado').innerText = `$ ${(facturado).toLocaleString('en-US')}`;
-            document.getElementById('kpi-confirmar').innerText = `$ ${(porConfirmar > 0 ? porConfirmar : 0).toLocaleString('en-US')}`;
-            document.getElementById('kpi-anulado').innerText = `$ ${(anulado).toLocaleString('en-US')}`;
-
-            // 2. Actualizar Vistas
-            updateMonthlyChart();
-            updateParetoChart();
-            updateTable();
-            updateMap();
-        }
-
-        // ==========================================
-        // CONFIGURACIÓN Y ACTUALIZACIÓN DE GRÁFICOS
-        // ==========================================
-        function initCharts() {
-            // Gráfico Mensual
-            const ctxMonthly = document.getElementById('monthlyChart').getContext('2d');
-            monthlyChart = new Chart(ctxMonthly, {
-                type: 'bar',
-                data: { labels: [], datasets:[] },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        datalabels: {
-                            anchor: 'end', align: 'top',
-                            formatter: (value, context) => {
-                                if (context.dataset.type === 'line' || value === 0) return null;
-                                let label = value.toFixed(1) + 'k';
-                                if (context.dataset.label === 'Anulado') {
-                                    const cot = context.chart.data.datasets[0].data[context.dataIndex];
-                                    const percent = cot > 0 ? ((value / cot) * 100).toFixed(1) : 0;
-                                    return `${label}\n(${percent}%)`;
-                                }
-                                return label;
-                            },
-                            font: { size: 9, weight: '800' },
-                            color: ctx => ctx.dataset.label === 'Anulado' ? '#b91c1c' : '#475569',
-                            textAlign: 'center'
-                        }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, max: 90, ticks: { font: { size: 10, weight: 'bold' }, callback: v => v + 'k' }, grid: { borderDash: [4, 4], drawBorder: false } },
-                        x: { grid: { display: false }, ticks: { font: { size: 11, weight: '800' }, color: '#1e293b' } }
+        new Chart(ctxMonthly, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets:[
+                    { label: 'Cotización', data: dataCotizaciones, backgroundColor: '#e2e8f0', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8 },
+                    { label: 'Facturado', data: dataFacturado, backgroundColor: '#2563eb', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8 },
+                    { label: 'Anulado', data: dataAnulado, backgroundColor: '#f87171', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8 },
+                    { label: 'Tendencia Cotización', data: dataCotizaciones, type: 'line', borderColor: '#0f172a', borderWidth: 2, pointBackgroundColor: '#fff', pointBorderColor: '#0f172a', pointRadius: 4, fill: false, tension: 0.3, datalabels: { display: false } }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false },
+                    datalabels: {
+                        anchor: 'end', align: 'top', formatter: (value, context) => {
+                            if (context.dataset.type === 'line') return null;
+                            const datasetLabel = context.dataset.label;
+                            let label = value.toFixed(1) + 'k';
+                            if (datasetLabel === 'Anulado') {
+                                const cotizacionMes = context.chart.data.datasets[0].data[context.dataIndex];
+                                const percent = ((value / cotizacionMes) * 100).toFixed(1);
+                                return `${label}\n(${percent}%)`;
+                            }
+                            return label;
+                        },
+                        font: { size: 9, weight: '800' }, color: (context) => context.dataset.label === 'Anulado' ? '#b91c1c' : '#475569', textAlign: 'center'
                     }
+                },
+                scales: {
+                    y: { beginAtZero: true, max: 90, ticks: { font: { size: 10, weight: 'bold' }, callback: v => v + 'k' }, grid: { borderDash: [4, 4], drawBorder: false } },
+                    x: { grid: { display: false }, ticks: { font: { size: 11, weight: '800' }, color: '#1e293b' } }
                 }
-            });
+            }
+        });
 
-            // Gráfico Pareto
-            const ctxPareto = document.getElementById('paretoChart').getContext('2d');
-            paretoChart = new Chart(ctxPareto, {
-                type: 'bar',
-                data: { labels: [], datasets:[] },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.95)', titleFont: { size: 12 }, padding: 10,
-                            callbacks: {
-                                label: function(ctx) {
-                                    if (ctx.dataset.type === 'line') return `Acumulado: ${ctx.raw}%`;
-                                    // Guardamos el viaje en una estructura temporal y lo extraemos aquí si se requiere (simplificado visualmente)
-                                    return `Monto: $${ctx.raw.toLocaleString()}`;
-                                }
+        const ctxPareto = document.getElementById('paretoChart').getContext('2d');
+        const paretoLabels =['ELEFANTE', 'MECHE', 'HUERE', 'PORTILLA', 'R&J', 'CRISTO M.'];
+        const paretoAmounts =[80000, 20000, 8000, 4000, 3000, 2000];
+        const paretoTrips =[45, 12, 4, 3, 2, 1];
+        const totalAmount = paretoAmounts.reduce((a, b) => a + b, 0);
+        let cumulative = 0;
+        const cumulativePercents = paretoAmounts.map(amount => { cumulative += amount; return ((cumulative / totalAmount) * 100).toFixed(1); });
+
+        new Chart(ctxPareto, {
+            type: 'bar',
+            data: {
+                labels: paretoLabels,
+                datasets:[
+                    { label: '% Acumulado', data: cumulativePercents, type: 'line', yAxisID: 'y1', borderColor: '#ef4444', backgroundColor: '#ef4444', borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#fff', pointBorderColor: '#ef4444', datalabels: { display: false } },
+                    { label: 'Monto ($)', data: paretoAmounts, yAxisID: 'y', backgroundColor: '#3b82f6', borderRadius: 4, barPercentage: 0.6, datalabels: { anchor: 'end', align: 'top', formatter: (value) => '$' + (value/1000).toFixed(0) + 'k', font: { size: 9, weight: '800' }, color: '#1e293b' } }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.95)', titleFont: { size: 12 }, bodyFont: { size: 12 }, padding: 10,
+                        callbacks: {
+                            label: function(context) {
+                                if (context.dataset.type === 'line') return `Acumulado: ${context.raw}%`;
+                                else { const idx = context.dataIndex; const rep = ((context.raw / totalAmount) * 100).toFixed(1); return[ `Monto: $${context.raw.toLocaleString()}`, `Viajes Realizados: ${paretoTrips[idx]}`, `Representación: ${rep}%` ]; }
                             }
                         }
-                    },
-                    scales: {
-                        y: { position: 'left', grid: { borderDash: [4, 4] }, ticks: { font: { size: 9 }, callback: v => '$' + (v/1000) + 'k' } },
-                        y1: { position: 'right', max: 110, grid: { drawOnChartArea: false }, ticks: { font: { size: 9 }, callback: v => v + '%' } },
-                        x: { grid: { display: false }, ticks: { font: { size: 9, weight: '800' } } }
                     }
+                },
+                scales: {
+                    y: { type: 'linear', display: true, position: 'left', max: 95000, grid: { borderDash: [4, 4] }, ticks: { font: { size: 9 }, callback: v => '$' + (v/1000) + 'k' } },
+                    y1: { type: 'linear', display: true, position: 'right', max: 110, grid: { drawOnChartArea: false }, ticks: { font: { size: 9 }, callback: v => v + '%' } },
+                    x: { grid: { display: false }, ticks: { font: { size: 9, weight: '800' } } }
                 }
-            });
-        }
-
-        function updateMonthlyChart() {
-            // Agrupar por mes
-            const monthMap = new Map();
-            filteredData.forEach(d => {
-                if(!monthMap.has(d.mes)) monthMap.set(d.mes, { cot: 0, fact: 0, anul: 0 });
-                let curr = monthMap.get(d.mes);
-                curr.cot += d.cotizacion;
-                curr.fact += d.facturado;
-                curr.anul += d.anulado;
-            });
-
-            const sortedMonths = Array.from(monthMap.keys()).sort((a,b)=>a-b);
-            const labels = sortedMonths.map(m => monthNames[m]);
-            const dCot = sortedMonths.map(m => monthMap.get(m).cot);
-            const dFact = sortedMonths.map(m => monthMap.get(m).fact);
-            const dAnul = sortedMonths.map(m => monthMap.get(m).anul);
-
-            monthlyChart.data.labels = labels;
-            monthlyChart.data.datasets =[
-                { label: 'Cotización', data: dCot, backgroundColor: '#e2e8f0', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8 },
-                { label: 'Facturado', data: dFact, backgroundColor: '#2563eb', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8 },
-                { label: 'Anulado', data: dAnul, backgroundColor: '#f87171', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8 },
-                { label: 'Tendencia', data: dCot, type: 'line', borderColor: '#0f172a', borderWidth: 2, pointBackgroundColor: '#fff', tension: 0.3, datalabels: { display: false } }
-            ];
-            monthlyChart.update();
-        }
-
-        function updateParetoChart() {
-            const contMap = new Map();
-            filteredData.forEach(d => {
-                contMap.set(d.contractor, (contMap.get(d.contractor) || 0) + d.monto);
-            });
-
-            const sorted = Array.from(contMap.entries()).sort((a,b) => b[1] - a[1]);
-            const labels = sorted.map(i => i[0]);
-            const amounts = sorted.map(i => i[1]);
-            
-            const total = amounts.reduce((a,b) => a+b, 0);
-            let cum = 0;
-            const percents = amounts.map(a => {
-                cum += a;
-                return total > 0 ? ((cum/total)*100).toFixed(1) : 0;
-            });
-
-            paretoChart.data.labels = labels;
-            paretoChart.data.datasets =[
-                { type: 'line', label: '% Acumulado', data: percents, yAxisID: 'y1', borderColor: '#ef4444', borderWidth: 2, pointBackgroundColor: '#fff', datalabels: { display: false } },
-                { type: 'bar', label: 'Monto ($)', data: amounts, yAxisID: 'y', backgroundColor: '#3b82f6', borderRadius: 4, barPercentage: 0.6, 
-                  datalabels: { anchor: 'end', align: 'top', formatter: v => '$' + (v/1000).toFixed(0) + 'k', font: { size: 9, weight: '800' } } }
-            ];
-            paretoChart.update();
-        }
-
-        // ==========================================
-        // ACTUALIZACIÓN DE TABLA Y MAPA
-        // ==========================================
-        function updateTable() {
-            // Extraer destinos únicos
-            const uniqueDestinos =[];
-            const mapKeys = new Set();
-            filteredData.forEach(d => {
-                const key = d.destino + d.modelo;
-                if(!mapKeys.has(key)) {
-                    mapKeys.add(key);
-                    uniqueDestinos.push(d);
-                }
-            });
-
-            const html = uniqueDestinos.map(d => {
-                const varPerc = d.t2025 > 0 ? (((d.t2026 / d.t2025) - 1) * 100).toFixed(1) : 0;
-                const colorVar = varPerc > 0 ? 'text-emerald-600' : (varPerc < 0 ? 'text-red-500' : 'text-slate-500');
-                return `
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="p-3">${d.destino}</td>
-                    <td class="p-3">${d.modelo}</td>
-                    <td class="p-3 text-right">$ ${d.t2025.toLocaleString()}</td>
-                    <td class="p-3 text-right font-bold">$ ${d.t2026.toLocaleString()}</td>
-                    <td class="p-3 text-center font-bold ${colorVar}">${varPerc > 0 ? '+'+varPerc : varPerc}%</td>
-                </tr>`;
-            }).join('');
-            
-            document.getElementById('tableBody').innerHTML = html || `<tr><td colspan="5" class="p-4 text-center text-slate-400">Sin datos para estos filtros</td></tr>`;
-        }
-
-        function initMap() {
-            map = L.map('map', { zoomControl: true }).setView([-9.19, -75.01], 5);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
-        }
-
-        function updateMap() {
-            if (!map) return;
-            map.eachLayer(layer => { if(layer instanceof L.CircleMarker) map.removeLayer(layer); });
-            
-            const group = L.featureGroup();
-            const addedCoords = new Set();
-
-            filteredData.forEach(d => {
-                const key = `${d.lat},${d.lng}`;
-                if (!addedCoords.has(key)) {
-                    addedCoords.add(key);
-                    const isBase = d.destino.includes('LIMA'); // Ejemplo de base
-                    const m = L.circleMarker([d.lat, d.lng], {
-                        radius: isBase ? 8 : 6,
-                        fillColor: isBase ? "#1e293b" : "#3b82f6",
-                        color: "#fff", weight: 2, fillOpacity: 1
-                    }).addTo(map);
-                    m.bindPopup(`<b class="text-xs uppercase">${d.destino}</b>`);
-                    group.addLayer(m);
-                }
-            });
-
-            if (addedCoords.size > 0) {
-                map.fitBounds(group.getBounds().pad(0.3));
             }
-        }
+        });
+
+        window.onload = function() {
+            const map = L.map('map', { zoomControl: false });
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
+            const locations =[
+                { name: "Lima / Lurin", coords:[-12.046, -77.042], type: 'base' },
+                { name: "Pasco", coords:[-10.684, -76.256] },
+                { name: "Huamachuco", coords: [-7.812, -78.049] },
+                { name: "Nasca", coords: [-14.835, -74.932] }
+            ];
+            const markerGroup = L.featureGroup();
+            locations.forEach(loc => {
+                const marker = L.circleMarker(loc.coords, { radius: loc.type === 'base' ? 8 : 6, fillColor: loc.type === 'base' ? "#1e293b" : "#3b82f6", color: "#fff", weight: 2, fillOpacity: 1 }).addTo(map);
+                markerGroup.addLayer(marker);
+            });
+            map.fitBounds(markerGroup.getBounds().pad(0.3));
+        };
 
         // ==========================================
-        // FUNCIONES DE INTERFAZ Y ORDENAMIENTO
+        // FUNCIONES DE UI (MENÚS Y TABLA)
         // ==========================================
         function toggleDropdown(id) {
             document.getElementById(id).classList.toggle('hidden');
         }
 
-        function handleSelectAll(className, source) {
-            document.querySelectorAll('.' + className).forEach(cb => cb.checked = source.checked);
-            applyFilters();
+        function toggleAllMonths(source) {
+            document.querySelectorAll('.month-cb').forEach(cb => cb.checked = source.checked);
         }
 
-        // Cierra los dropdowns al hacer clic fuera
+        // Cierra los menús al hacer click afuera
         window.onclick = function(e) {
             if (!e.target.closest('.dropdown-container')) {
                 document.getElementById('yearDropdown').classList.add('hidden');
@@ -465,36 +305,24 @@
             }
         }
 
+        // Ordenar tabla
         function sortTable(n) {
-            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-            table = document.getElementById("tarifasTable");
-            switching = true; dir = "asc";
+            var table = document.getElementById("tarifasTable"), rows, switching = true, i, x, y, shouldSwitch, dir = "asc", switchcount = 0;
             while (switching) {
-                switching = false;
-                rows = table.rows;
+                switching = false; rows = table.rows;
                 for (i = 1; i < (rows.length - 1); i++) {
-                    shouldSwitch = false;
-                    x = rows[i].getElementsByTagName("TD")[n];
-                    y = rows[i + 1].getElementsByTagName("TD")[n];
-                    let xVal = x.innerHTML.replace(/[$,%+]/g, '').trim();
-                    let yVal = y.innerHTML.replace(/[$,%+]/g, '').trim();
+                    shouldSwitch = false; x = rows[i].getElementsByTagName("TD")[n]; y = rows[i + 1].getElementsByTagName("TD")[n];
+                    let xVal = x.innerHTML.replace(/[$,%+]/g, '').trim(), yVal = y.innerHTML.replace(/[$,%+]/g, '').trim();
                     if (dir == "asc") {
                         if (isNaN(xVal) ? (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) : (parseFloat(xVal) > parseFloat(yVal))) { shouldSwitch = true; break; }
                     } else if (dir == "desc") {
                         if (isNaN(xVal) ? (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) : (parseFloat(xVal) < parseFloat(yVal))) { shouldSwitch = true; break; }
                     }
                 }
-                if (shouldSwitch) {
-                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                    switching = true; switchcount ++;
-                } else if (switchcount == 0 && dir == "asc") {
-                    dir = "desc"; switching = true;
-                }
+                if (shouldSwitch) { rows[i].parentNode.insertBefore(rows[i + 1], rows[i]); switching = true; switchcount++; }
+                else if (switchcount == 0 && dir == "asc") { dir = "desc"; switching = true; }
             }
         }
-
-        // Iniciar
-        window.onload = init;
     </script>
 </body>
 </html>
