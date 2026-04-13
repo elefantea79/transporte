@@ -16,6 +16,7 @@
         #map { height: 350px; border-radius: 12px; border: 1px solid #e2e8f0; z-index: 10; }
         .badge-elefante { background: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px; font-weight: 800; font-size: 9px; }
         .badge-tercero { background: #f1f5f9; color: #475569; padding: 2px 6px; border-radius: 4px; font-weight: 800; font-size: 9px; }
+        /* Tabla */
         th { cursor: pointer; transition: background 0.2s; }
         th:hover { background: #f8fafc; }
     </style>
@@ -24,61 +25,65 @@
 
     <div class="max-w-7xl mx-auto space-y-8">
         
-        <!-- ENCABEZADO Y FILTROS -->
-        <!-- NOTA: Se cambió overflow-hidden a overflow-visible para que los menús puedan desplegarse hacia abajo -->
-        <div class="bg-slate-900 rounded-2xl p-6 md:p-8 text-white shadow-xl relative overflow-visible">
-            <div class="relative z-20">
-                <div class="flex justify-between items-start mb-6">
+        <!-- ENCABEZADO -->
+        <!-- OJO: Se quitó 'overflow-hidden' para que los menús puedan salir de la caja oscura -->
+        <div class="bg-slate-900 rounded-2xl p-6 md:p-8 text-white shadow-xl relative">
+            <div class="relative z-50">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                     <div>
                         <h1 class="text-3xl font-extrabold tracking-tight">Consolidado Trimestral Q1 2026</h1>
                         <p class="text-slate-400 font-medium">Gestión de Transporte y Logística Especializada</p>
                     </div>
                     
-                    <!-- NUEVO: MENÚS DESPLEGABLES -->
-                    <div class="flex gap-3">
-                        <!-- Dropdown Año -->
+                    <!-- AQUI ESTÁN TUS MENÚS DESPLEGABLES -->
+                    <div class="flex flex-wrap items-center gap-3">
+                        
+                        <!-- Dropdown AÑO -->
                         <div class="relative dropdown-container">
-                            <button onclick="toggleDropdown('yearDropdown')" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-bold border border-slate-700 transition-colors">
-                                Año: 2026 
+                            <button onclick="document.getElementById('yearDrop').classList.toggle('hidden')" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all">
+                                Año: 2026
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-                            <div id="yearDropdown" class="hidden absolute right-0 mt-2 w-40 rounded-xl shadow-2xl bg-white border border-slate-200 text-slate-800 z-50">
-                                <div class="p-2 space-y-1">
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 cursor-pointer rounded-lg">
-                                        <input type="checkbox" checked class="w-4 h-4 rounded text-blue-600">
+                            <div id="yearDrop" class="hidden absolute right-0 mt-2 w-40 rounded-xl shadow-2xl bg-white border border-slate-200 z-[100]">
+                                <div class="p-2 space-y-1 text-slate-800">
+                                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer">
+                                        <input type="checkbox" checked class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500">
                                         <span class="text-sm font-bold">2026</span>
                                     </label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 cursor-pointer rounded-lg">
-                                        <input type="checkbox" class="w-4 h-4 rounded text-blue-600">
+                                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer">
+                                        <input type="checkbox" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500">
                                         <span class="text-sm font-bold">2025</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Dropdown Meses -->
+                        <!-- Dropdown MESES -->
                         <div class="relative dropdown-container">
-                            <button onclick="toggleDropdown('monthDropdown')" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg transition-colors">
-                                Filtrar Meses 
+                            <button onclick="document.getElementById('monthDrop').classList.toggle('hidden')" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all">
+                                Filtrar Meses
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-                            <div id="monthDropdown" class="hidden absolute right-0 mt-2 w-56 rounded-xl shadow-2xl bg-white border border-slate-200 text-slate-800 z-50">
-                                <div class="p-3 border-b border-slate-100 bg-slate-50 rounded-t-xl">
-                                    <label class="flex items-center gap-3 cursor-pointer">
-                                        <input type="checkbox" checked onclick="toggleAllMonths(this)" class="w-4 h-4 rounded text-blue-600">
-                                        <span class="text-sm font-bold">Seleccionar Todos</span>
+                            <div id="monthDrop" class="hidden absolute right-0 mt-2 w-56 rounded-xl shadow-2xl bg-white border border-slate-200 z-[100]">
+                                <div class="p-3 border-b border-slate-100 text-slate-800">
+                                    <label class="flex items-center gap-3 cursor-pointer group">
+                                        <input type="checkbox" checked onclick="document.querySelectorAll('.m-chk').forEach(c => c.checked = this.checked)" class="w-4 h-4 rounded text-blue-600">
+                                        <span class="text-sm font-bold group-hover:text-blue-600">Seleccionar Todos</span>
                                     </label>
                                 </div>
-                                <div class="p-2 space-y-1 max-h-60 overflow-y-auto">
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 cursor-pointer rounded-lg">
-                                        <input type="checkbox" checked class="month-cb w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Enero</span>
-                                    </label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 cursor-pointer rounded-lg">
-                                        <input type="checkbox" checked class="month-cb w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Febrero</span>
-                                    </label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 cursor-pointer rounded-lg">
-                                        <input type="checkbox" checked class="month-cb w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Marzo</span>
-                                    </label>
+                                <div class="max-h-64 overflow-y-auto p-2 space-y-1 text-slate-800">
+                                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" checked class="m-chk w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Enero</span></label>
+                                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" checked class="m-chk w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Febrero</span></label>
+                                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" checked class="m-chk w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Marzo</span></label>
+                                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" class="m-chk w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Abril</span></label>
+                                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" class="m-chk w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Mayo</span></label>
+                                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" class="m-chk w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Junio</span></label>
+                                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" class="m-chk w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Julio</span></label>
+                                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" class="m-chk w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Agosto</span></label>
+                                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" class="m-chk w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Septiembre</span></label>
+                                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" class="m-chk w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Octubre</span></label>
+                                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" class="m-chk w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Noviembre</span></label>
+                                    <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" class="m-chk w-4 h-4 rounded text-blue-600"><span class="text-sm font-semibold text-slate-600">Diciembre</span></label>
                                 </div>
                             </div>
                         </div>
@@ -104,11 +109,13 @@
                     </div>
                 </div>
             </div>
+            <!-- Círculo de fondo con z-index 0 -->
             <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full -mr-20 -mt-20 blur-3xl z-0 pointer-events-none"></div>
         </div>
 
-        <!-- GRÁFICOS INTACTOS -->
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            
+            <!-- GRÁFICO 1: BARRAS CON TENDENCIA -->
             <div class="lg:col-span-3 kpi-card">
                 <div class="flex justify-between items-center mb-6">
                     <div>
@@ -126,6 +133,7 @@
                 </div>
             </div>
 
+            <!-- GRÁFICO 2: PARETO -->
             <div class="lg:col-span-2 kpi-card flex flex-col">
                 <div class="flex justify-between items-start mb-4">
                     <div>
@@ -147,16 +155,16 @@
             </div>
         </div>
 
-        <!-- TABLA Y MAPA AGREGADOS JUNTOS -->
+        <!-- SECCIÓN DE TABLA Y MAPA -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <!-- TABLA DE TARIFAS -->
-            <div class="lg:col-span-7 kpi-card overflow-hidden p-0 flex flex-col">
+            <!-- TABLA COMPARATIVA -->
+            <div class="col-span-12 lg:col-span-7 kpi-card overflow-hidden p-0">
                 <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
                     <h3 class="font-bold text-slate-800 text-sm uppercase tracking-tight">Comparación de Tarifas 2025 vs 2026</h3>
                     <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">ORDENABLE POR COLUMNA</span>
                 </div>
-                <div class="overflow-x-auto flex-grow">
+                <div class="overflow-x-auto">
                     <table class="w-full text-[11px] text-left" id="tarifasTable">
                         <thead class="bg-slate-100 text-slate-500 uppercase font-black">
                             <tr>
@@ -168,33 +176,89 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
-                            <tr><td class="p-3">LIMA - PASCO</td><td class="p-3">L120H</td><td class="p-3 text-right">$ 4,100</td><td class="p-3 text-right font-bold">$ 4,500</td><td class="p-3 text-center font-bold text-emerald-600">+9.7%</td></tr>
-                            <tr><td class="p-3">LIMA - HUAMACHUCO</td><td class="p-3">L150H</td><td class="p-3 text-right">$ 3,850</td><td class="p-3 text-right font-bold">$ 4,000</td><td class="p-3 text-center font-bold text-emerald-600">+3.9%</td></tr>
-                            <tr><td class="p-3">STA ANITA - LURIN</td><td class="p-3">EC360</td><td class="p-3 text-right">$ 550</td><td class="p-3 text-right font-bold">$ 600</td><td class="p-3 text-center font-bold text-emerald-600">+9.1%</td></tr>
-                            <tr><td class="p-3">TVC - TVS</td><td class="p-3">EC380</td><td class="p-3 text-right">$ 660</td><td class="p-3 text-right font-bold">$ 710</td><td class="p-3 text-center font-bold text-emerald-600">+7.6%</td></tr>
+                            <tr>
+                                <td class="p-3">LIMA - PASCO</td>
+                                <td class="p-3">L120H</td>
+                                <td class="p-3 text-right">$ 4,100</td>
+                                <td class="p-3 text-right font-bold">$ 4,500</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+9.7%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">LIMA - HUAMACHUCO</td>
+                                <td class="p-3">L150H</td>
+                                <td class="p-3 text-right">$ 3,850</td>
+                                <td class="p-3 text-right font-bold">$ 4,000</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+3.9%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">STA ANITA - LURIN</td>
+                                <td class="p-3">EC360</td>
+                                <td class="p-3 text-right">$ 550</td>
+                                <td class="p-3 text-right font-bold">$ 600</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+9.1%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">TVC - TVS</td>
+                                <td class="p-3">EC380</td>
+                                <td class="p-3 text-right">$ 660</td>
+                                <td class="p-3 text-right font-bold">$ 710</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+7.6%</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
             <!-- MAPA -->
-            <div class="lg:col-span-5 kpi-card">
+            <div class="col-span-12 lg:col-span-5 kpi-card">
                 <h3 class="font-extrabold text-slate-800 mb-4 uppercase tracking-tight text-sm">Zonas de Operación Logística Q1</h3>
                 <div id="map"></div>
             </div>
         </div>
     </div>
 
+    <!-- SCRIPT INTACTO (Sin modificaciones en la lógica de datos ni Charts) -->
     <script>
+        // Cierra los menús si haces clic fuera de ellos
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown-container')) {
+                document.getElementById('yearDrop').classList.add('hidden');
+                document.getElementById('monthDrop').classList.add('hidden');
+            }
+        });
+
+        // Ordenamiento estático de la tabla
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("tarifasTable");
+            switching = true; dir = "asc";
+            while (switching) {
+                switching = false; rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false; x = rows[i].getElementsByTagName("TD")[n]; y = rows[i + 1].getElementsByTagName("TD")[n];
+                    let xVal = x.innerHTML.replace(/[$,%+]/g, '').trim(); let yVal = y.innerHTML.replace(/[$,%+]/g, '').trim();
+                    if (dir == "asc") {
+                        if (isNaN(xVal)) { if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) { shouldSwitch = true; break; } } 
+                        else { if (parseFloat(xVal) > parseFloat(yVal)) { shouldSwitch = true; break; } }
+                    } else if (dir == "desc") {
+                        if (isNaN(xVal)) { if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) { shouldSwitch = true; break; } } 
+                        else { if (parseFloat(xVal) < parseFloat(yVal)) { shouldSwitch = true; break; } }
+                    }
+                }
+                if (shouldSwitch) { rows[i].parentNode.insertBefore(rows[i + 1], rows[i]); switching = true; switchcount++; } 
+                else { if (switchcount == 0 && dir == "asc") { dir = "desc"; switching = true; } }
+            }
+        }
+
         Chart.register(ChartDataLabels);
 
         // ==========================================
-        // CÓDIGO INTACTO DE TUS GRÁFICOS
+        // 1. GRÁFICO MENSUAL (INTACTO)
         // ==========================================
         const ctxMonthly = document.getElementById('monthlyChart').getContext('2d');
-        const months =['ENERO', 'FEBRERO', 'MARZO'];
-        const dataCotizaciones =[35.2, 63.0, 51.9]; 
-        const dataFacturado =[35.2, 63.0, 24.6]; 
+        const months = ['ENERO', 'FEBRERO', 'MARZO'];
+        const dataCotizaciones = [35.2, 63.0, 51.9]; 
+        const dataFacturado = [35.2, 63.0, 24.6]; 
         const dataAnulado =[21.6, 56.3, 50.7];
 
         new Chart(ctxMonthly, {
@@ -209,9 +273,12 @@
                 ]
             },
             options: {
-                responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false },
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
                     datalabels: {
-                        anchor: 'end', align: 'top', formatter: (value, context) => {
+                        anchor: 'end', align: 'top',
+                        formatter: (value, context) => {
                             if (context.dataset.type === 'line') return null;
                             const datasetLabel = context.dataset.label;
                             let label = value.toFixed(1) + 'k';
@@ -232,13 +299,20 @@
             }
         });
 
+        // ==========================================
+        // 2. GRÁFICO DE PARETO (INTACTO)
+        // ==========================================
         const ctxPareto = document.getElementById('paretoChart').getContext('2d');
         const paretoLabels =['ELEFANTE', 'MECHE', 'HUERE', 'PORTILLA', 'R&J', 'CRISTO M.'];
         const paretoAmounts =[80000, 20000, 8000, 4000, 3000, 2000];
         const paretoTrips =[45, 12, 4, 3, 2, 1];
+        
         const totalAmount = paretoAmounts.reduce((a, b) => a + b, 0);
         let cumulative = 0;
-        const cumulativePercents = paretoAmounts.map(amount => { cumulative += amount; return ((cumulative / totalAmount) * 100).toFixed(1); });
+        const cumulativePercents = paretoAmounts.map(amount => {
+            cumulative += amount;
+            return ((cumulative / totalAmount) * 100).toFixed(1);
+        });
 
         new Chart(ctxPareto, {
             type: 'bar',
@@ -250,79 +324,55 @@
                 ]
             },
             options: {
-                responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false },
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
                     tooltip: {
                         backgroundColor: 'rgba(15, 23, 42, 0.95)', titleFont: { size: 12 }, bodyFont: { size: 12 }, padding: 10,
                         callbacks: {
                             label: function(context) {
-                                if (context.dataset.type === 'line') return `Acumulado: ${context.raw}%`;
-                                else { const idx = context.dataIndex; const rep = ((context.raw / totalAmount) * 100).toFixed(1); return[ `Monto: $${context.raw.toLocaleString()}`, `Viajes Realizados: ${paretoTrips[idx]}`, `Representación: ${rep}%` ]; }
+                                if (context.dataset.type === 'line') {
+                                    return `Acumulado: ${context.raw}%`;
+                                } else {
+                                    const idx = context.dataIndex;
+                                    const rep = ((context.raw / totalAmount) * 100).toFixed(1);
+                                    return[ `Monto: $${context.raw.toLocaleString()}`, `Viajes Realizados: ${paretoTrips[idx]}`, `Representación: ${rep}%` ];
+                                }
                             }
                         }
                     }
                 },
                 scales: {
-                    y: { type: 'linear', display: true, position: 'left', max: 95000, grid: { borderDash: [4, 4] }, ticks: { font: { size: 9 }, callback: v => '$' + (v/1000) + 'k' } },
+                    y: { type: 'linear', display: true, position: 'left', max: 95000, grid: { borderDash:[4, 4] }, ticks: { font: { size: 9 }, callback: v => '$' + (v/1000) + 'k' } },
                     y1: { type: 'linear', display: true, position: 'right', max: 110, grid: { drawOnChartArea: false }, ticks: { font: { size: 9 }, callback: v => v + '%' } },
                     x: { grid: { display: false }, ticks: { font: { size: 9, weight: '800' } } }
                 }
             }
         });
 
+        // ==========================================
+        // 3. MAPA DE OPERACIONES (INTACTO)
+        // ==========================================
         window.onload = function() {
             const map = L.map('map', { zoomControl: false });
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
             const locations =[
-                { name: "Lima / Lurin", coords:[-12.046, -77.042], type: 'base' },
+                { name: "Lima / Lurin", coords: [-12.046, -77.042], type: 'base' },
                 { name: "Pasco", coords:[-10.684, -76.256] },
-                { name: "Huamachuco", coords: [-7.812, -78.049] },
-                { name: "Nasca", coords: [-14.835, -74.932] }
+                { name: "Huamachuco", coords:[-7.812, -78.049] },
+                { name: "Nasca", coords:[-14.835, -74.932] }
             ];
             const markerGroup = L.featureGroup();
             locations.forEach(loc => {
-                const marker = L.circleMarker(loc.coords, { radius: loc.type === 'base' ? 8 : 6, fillColor: loc.type === 'base' ? "#1e293b" : "#3b82f6", color: "#fff", weight: 2, fillOpacity: 1 }).addTo(map);
+                const marker = L.circleMarker(loc.coords, {
+                    radius: loc.type === 'base' ? 8 : 6,
+                    fillColor: loc.type === 'base' ? "#1e293b" : "#3b82f6",
+                    color: "#fff", weight: 2, fillOpacity: 1
+                }).addTo(map);
                 markerGroup.addLayer(marker);
             });
             map.fitBounds(markerGroup.getBounds().pad(0.3));
         };
-
-        // ==========================================
-        // FUNCIONES DE UI (MENÚS Y TABLA)
-        // ==========================================
-        function toggleDropdown(id) {
-            document.getElementById(id).classList.toggle('hidden');
-        }
-
-        function toggleAllMonths(source) {
-            document.querySelectorAll('.month-cb').forEach(cb => cb.checked = source.checked);
-        }
-
-        // Cierra los menús al hacer click afuera
-        window.onclick = function(e) {
-            if (!e.target.closest('.dropdown-container')) {
-                document.getElementById('yearDropdown').classList.add('hidden');
-                document.getElementById('monthDropdown').classList.add('hidden');
-            }
-        }
-
-        // Ordenar tabla
-        function sortTable(n) {
-            var table = document.getElementById("tarifasTable"), rows, switching = true, i, x, y, shouldSwitch, dir = "asc", switchcount = 0;
-            while (switching) {
-                switching = false; rows = table.rows;
-                for (i = 1; i < (rows.length - 1); i++) {
-                    shouldSwitch = false; x = rows[i].getElementsByTagName("TD")[n]; y = rows[i + 1].getElementsByTagName("TD")[n];
-                    let xVal = x.innerHTML.replace(/[$,%+]/g, '').trim(), yVal = y.innerHTML.replace(/[$,%+]/g, '').trim();
-                    if (dir == "asc") {
-                        if (isNaN(xVal) ? (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) : (parseFloat(xVal) > parseFloat(yVal))) { shouldSwitch = true; break; }
-                    } else if (dir == "desc") {
-                        if (isNaN(xVal) ? (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) : (parseFloat(xVal) < parseFloat(yVal))) { shouldSwitch = true; break; }
-                    }
-                }
-                if (shouldSwitch) { rows[i].parentNode.insertBefore(rows[i + 1], rows[i]); switching = true; switchcount++; }
-                else if (switchcount == 0 && dir == "asc") { dir = "desc"; switching = true; }
-            }
-        }
     </script>
 </body>
 </html>
