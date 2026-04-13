@@ -3,114 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Gerencial Elefante SAC</title>
+    <title>Dashboard Gerencial Elefante SAC - Dinámico</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; }
-        .grid-layout {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            grid-template-rows: auto auto auto;
-            gap: 1rem;
-        }
-        .card { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; padding: 1rem; }
-        .kpi-value { font-size: 1.5rem; font-weight: 800; line-height: 1; }
-        .kpi-label { font-size: 0.65rem; font-weight: 700; color: #64748b; text-transform: uppercase; }
+        .kpi-card { background: white; border-radius: 12px; padding: 1.5rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        #map { height: 350px; border-radius: 12px; border: 1px solid #e2e8f0; }
         
-        /* Filtros */
-        .filter-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 600; }
+        /* Dropdown Meses Custom */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
         
-        /* Tabla */
         th { cursor: pointer; transition: background 0.2s; }
         th:hover { background: #f8fafc; }
     </style>
 </head>
-<body class="p-4">
+<body class="p-4 md:p-8">
 
-    <div class="max-w-[1600px] mx-auto space-y-4">
+    <div class="max-w-[1600px] mx-auto space-y-6">
         
-        <!-- SECCIÓN 2 & 3: FILTROS (SUPERIOR) -->
-        <div class="card flex flex-wrap gap-8 items-center py-3">
-            <div class="flex items-center gap-4">
-                <span class="text-[10px] font-black uppercase text-slate-400">Filtro Año:</span>
-                <label class="filter-item"><input type="checkbox" checked> 2026</label>
-                <label class="filter-item"><input type="checkbox"> 2025</label>
+        <!-- HEADER & FILTROS (MODELO ESTRELLA) -->
+        <div class="bg-slate-900 rounded-2xl p-6 text-white shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-extrabold tracking-tight">Dashboard Operativo Elefante SAC</h1>
+                <p class="text-slate-400 text-sm font-medium">Análisis en tiempo real sincronizado con Google Sheets</p>
             </div>
-            <div class="h-6 w-px bg-slate-200"></div>
-            <div class="flex items-center gap-4">
-                <span class="text-[10px] font-black uppercase text-slate-400">Filtro Mes:</span>
-                <label class="filter-item"><input type="checkbox" checked> Ene</label>
-                <label class="filter-item"><input type="checkbox" checked> Feb</label>
-                <label class="filter-item"><input type="checkbox" checked> Mar</label>
+            
+            <div class="flex flex-wrap items-center gap-3">
+                <!-- Filtro Año -->
+                <div class="bg-white/10 p-2 rounded-lg flex items-center gap-2 border border-white/20">
+                    <span class="text-[10px] font-black uppercase text-slate-300">Año:</span>
+                    <select id="yearFilter" onchange="syncMonthsWithData()" class="bg-transparent text-sm font-bold outline-none cursor-pointer text-white">
+                        <!-- Dinámico -->
+                    </select>
+                </div>
+
+                <!-- Filtro Meses (Dropdown) -->
+                <div class="relative" id="monthDropdownContainer">
+                    <button onclick="toggleMonthDropdown()" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-bold transition-all">
+                        Filtrar Meses 
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+
+                    <div id="monthDropdown" class="hidden absolute right-0 mt-2 w-56 rounded-xl shadow-2xl bg-white border border-slate-200 z-[100] text-slate-800">
+                        <div class="p-3 border-b border-slate-100">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" id="selectAllMonths" checked onclick="handleSelectAll(this)" class="w-4 h-4 rounded text-blue-600">
+                                <span class="text-sm font-bold">Seleccionar Todos</span>
+                            </label>
+                        </div>
+                        <div id="monthsList" class="max-h-64 overflow-y-auto p-2 space-y-1 custom-scrollbar">
+                            <!-- Dinámico -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- SECCIÓN 1: FICHAS DE RESUMEN (ESTADOS) -->
+        <!-- KPIs DINÁMICOS -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="card border-l-4 border-blue-600">
-                <p class="kpi-label">Cotizaciones Vigentes Q1</p>
-                <p class="kpi-value text-blue-700">$ 183,305</p>
-                <p class="text-[10px] text-slate-400 mt-1 font-bold">SUMATORIA ACUMULADA</p>
+            <div class="kpi-card border-l-4 border-blue-600">
+                <p class="text-[10px] font-bold text-slate-400 uppercase">Cotizaciones Vigentes</p>
+                <p id="kpi-vigente" class="text-2xl font-black text-blue-700">$ 0</p>
             </div>
-            <div class="card border-l-4 border-emerald-500">
-                <p class="kpi-label">Ejecutado (Fact + OC)</p>
-                <p class="kpi-value text-emerald-600">$ 141,905</p>
-                <p class="text-[10px] text-slate-400 mt-1 font-bold">TRABAJO REALIZADO</p>
+            <div class="kpi-card border-l-4 border-emerald-500">
+                <p class="text-[10px] font-bold text-slate-400 uppercase">Ejecutado (Fact + OC)</p>
+                <p id="kpi-ejecutado" class="text-2xl font-black text-emerald-600">$ 0</p>
             </div>
-            <div class="card border-l-4 border-amber-500">
-                <p class="kpi-label">Por Confirmar</p>
-                <p class="kpi-value text-amber-600">$ 23,967</p>
-                <p class="text-[10px] text-slate-400 mt-1 font-bold">RIESGO OPERATIVO</p>
+            <div class="kpi-card border-l-4 border-amber-500">
+                <p class="text-[10px] font-bold text-slate-400 uppercase">Por Confirmar</p>
+                <p id="kpi-confirmar" class="text-2xl font-black text-amber-600">$ 0</p>
             </div>
-            <div class="card border-l-4 border-rose-500">
-                <p class="kpi-label">Anulado (Confirmado)</p>
-                <p class="kpi-value text-rose-600">$ 26,800</p>
-                <p class="text-[10px] text-slate-400 mt-1 font-bold">PÉRDIDA DE MARZO</p>
+            <div class="kpi-card border-l-4 border-rose-500">
+                <p class="text-[10px] font-bold text-slate-400 uppercase">Anulado (Confirmado)</p>
+                <p id="kpi-anulado" class="text-2xl font-black text-rose-600">$ 0</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-12 gap-4">
-            <!-- SECCIÓN 4: COMPORTAMIENTO MENSUAL -->
-            <div class="col-span-12 lg:col-span-8 card">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-sm uppercase">Comportamiento Mensual por Estado</h3>
-                        <p class="text-[11px] text-slate-400">Línea de curvatura según comportamiento | Montos en miles (k)</p>
-                    </div>
-                    <div class="bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-100">
-                        <p class="text-[10px] font-bold text-emerald-700 uppercase">Crecimiento Mar vs Feb</p>
-                        <p class="text-xs font-black text-emerald-600">+ 39.1%</p>
-                    </div>
-                </div>
+        <div class="grid grid-cols-12 gap-6">
+            <!-- GRÁFICO MENSUAL -->
+            <div class="col-span-12 lg:col-span-8 kpi-card">
+                <h3 class="font-extrabold text-slate-800 uppercase text-sm mb-4">Análisis Comparativo Mensual</h3>
                 <div class="h-[350px]">
-                    <canvas id="comportamientoChart"></canvas>
+                    <canvas id="monthlyChart"></canvas>
                 </div>
             </div>
 
-            <!-- SECCIÓN 5: PARETO Y COMENTARIO ELEFANTE -->
-            <div class="col-span-12 lg:col-span-4 card">
-                <h3 class="font-bold text-slate-800 text-sm uppercase mb-2">Pareto de Facturación</h3>
-                <p class="text-[10px] text-slate-400 mb-4 font-bold uppercase">Elefante (Propio) vs Subcontratas</p>
-                <div class="h-[280px] mb-4">
+            <!-- PARETO -->
+            <div class="col-span-12 lg:col-span-4 kpi-card">
+                <h3 class="font-extrabold text-slate-800 uppercase text-sm mb-4">Pareto de Flota (Participación)</h3>
+                <div class="h-[350px]">
                     <canvas id="paretoChart"></canvas>
                 </div>
-                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
-                    <h4 class="text-[10px] font-black text-slate-700 uppercase mb-1">Análisis de Tercerización</h4>
-                    <p class="text-[11px] text-slate-600 leading-relaxed italic">
-                        "Elefante SAC concentra el <strong>68% ($96.5k)</strong> de la facturación directa con VOLVO. La subcontratación representa el <strong>32% ($45.4k)</strong>, utilizada principalmente ante picos de demanda donde la flota propia está en ruta."
-                    </p>
-                </div>
             </div>
 
-            <!-- SECCIÓN 6: COMPARACIÓN DE PRECIOS -->
-            <div class="col-span-12 lg:col-span-7 card overflow-hidden p-0">
+            <!-- TABLA DE TARIFAS (RECUPERADA) -->
+            <div class="col-span-12 lg:col-span-7 kpi-card overflow-hidden p-0">
                 <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
-                    <h3 class="font-bold text-slate-800 text-sm uppercase tracking-tight">Comparación de Tarifas 2025 vs 2026</h3>
-                    <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">ORDENABLE POR COLUMNA</span>
+                    <h3 class="font-bold text-slate-800 text-sm uppercase">Comparación Tarifas 2025 vs 2026</h3>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-[11px] text-left" id="tarifasTable">
@@ -118,206 +114,215 @@
                             <tr>
                                 <th class="p-3 border-b" onclick="sortTable(0)">Destino ↑↓</th>
                                 <th class="p-3 border-b" onclick="sortTable(1)">Modelo ↑↓</th>
-                                <th class="p-3 border-b text-right" onclick="sortTable(2)">Tarifa 2025 ↑↓</th>
-                                <th class="p-3 border-b text-right" onclick="sortTable(3)">Tarifa 2026 ↑↓</th>
-                                <th class="p-3 border-b text-center text-emerald-600">% Var ↑↓</th>
+                                <th class="p-3 border-b text-right">Tarifa 2025</th>
+                                <th class="p-3 border-b text-right">Tarifa 2026</th>
+                                <th class="p-3 border-b text-center text-emerald-600">% Var</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
-                            <tr>
-                                <td class="p-3">LIMA - PASCO</td>
-                                <td class="p-3">L120H</td>
-                                <td class="p-3 text-right">$ 4,100</td>
-                                <td class="p-3 text-right font-bold">$ 4,500</td>
-                                <td class="p-3 text-center font-bold text-emerald-600">+9.7%</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3">LIMA - HUAMACHUCO</td>
-                                <td class="p-3">L150H</td>
-                                <td class="p-3 text-right">$ 3,850</td>
-                                <td class="p-3 text-right font-bold">$ 4,000</td>
-                                <td class="p-3 text-center font-bold text-emerald-600">+3.9%</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3">STA ANITA - LURIN</td>
-                                <td class="p-3">EC360</td>
-                                <td class="p-3 text-right">$ 550</td>
-                                <td class="p-3 text-right font-bold">$ 600</td>
-                                <td class="p-3 text-center font-bold text-emerald-600">+9.1%</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3">TVC - TVS</td>
-                                <td class="p-3">EC380</td>
-                                <td class="p-3 text-right">$ 660</td>
-                                <td class="p-3 text-right font-bold">$ 710</td>
-                                <td class="p-3 text-center font-bold text-emerald-600">+7.6%</td>
-                            </tr>
+                        <tbody id="tableBody" class="divide-y divide-slate-100 font-medium text-slate-700">
+                            <!-- Dinámico -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- SECCIÓN 7: MAPA DE DESTINOS -->
-            <div class="col-span-12 lg:col-span-5 card">
-                <h3 class="font-bold text-slate-800 text-sm uppercase mb-3">Mapa de Cobertura de Servicios</h3>
-                <div id="map" class="h-[320px] rounded-lg border border-slate-200"></div>
-                <p class="text-[10px] text-slate-400 mt-2 font-bold uppercase tracking-wider">Principales rutas: Lima - Sierra Central / Norte</p>
+            <!-- MAPA -->
+            <div class="col-span-12 lg:col-span-5 kpi-card">
+                <h3 class="font-extrabold text-slate-800 uppercase text-sm mb-4">Mapa de Cobertura Operativa</h3>
+                <div id="map"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // Configuración de Gráfico de Comportamiento (Sección 4)
-        const ctxComportamiento = document.getElementById('comportamientoChart').getContext('2d');
-        new Chart(ctxComportamiento, {
-            type: 'bar',
-            data: {
-                labels: ['Enero', 'Febrero', 'Marzo'],
-                datasets: [
-                    {
-                        type: 'line',
-                        label: 'Tendencia Curvatura',
-                        data: [53, 54.5, 75.8],
-                        borderColor: '#0f172a',
-                        borderWidth: 2,
-                        tension: 0.4,
-                        fill: false,
-                        pointRadius: 5,
-                        pointBackgroundColor: '#0f172a',
-                        order: 1
-                    },
-                    {
-                        label: 'Vigentes (Neto)',
-                        data: [53, 54.5, 75.8],
-                        backgroundColor: '#2563eb',
-                        borderRadius: 6,
-                        order: 2
-                    },
-                    {
-                        label: 'Anulados',
-                        data: [38, 39.8, 26.8],
-                        backgroundColor: '#cbd5e1',
-                        borderRadius: 6,
-                        order: 2
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10, weight: 'bold' } } },
-                    tooltip: {
-                        callbacks: {
-                            label: (ctx) => {
-                                const val = ctx.raw;
-                                const serv = ctx.datasetIndex === 1 ? [12, 14, 21][ctx.dataIndex] : [8, 9, 6][ctx.dataIndex];
-                                return `${ctx.dataset.label}: $${val}k (${serv} Servicios)`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: { 
-                        beginAtZero: true, 
-                        ticks: { font: { size: 10, weight: '700' }, callback: v => v + 'k' },
-                        grid: { borderDash: [5, 5] }
-                    },
-                    x: { grid: { display: false }, ticks: { font: { size: 11, weight: '800' } } }
-                }
-            }
-        });
+        Chart.register(ChartDataLabels);
 
-        // Configuración de Pareto (Sección 5)
-        const ctxPareto = document.getElementById('paretoChart').getContext('2d');
-        new Chart(ctxPareto, {
-            type: 'bar',
-            data: {
-                labels: ['Elefante SAC', 'Huere SAC', 'Meche EIRL', 'Portilla Hnos', 'Otros'],
-                datasets: [
-                    {
-                        label: 'Monto Facturado (k)',
-                        data: [96.5, 32.7, 25.1, 22.3, 15.4],
-                        backgroundColor: (ctx) => ctx.index === 0 ? '#1e293b' : '#3b82f6',
-                        borderRadius: 4
-                    }
-                ]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { ticks: { font: { size: 10 } } },
-                    y: { ticks: { font: { size: 10, weight: 'bold' } } }
-                }
-            }
-        });
-
-        // Configuración de Mapa (Sección 7)
-        const map = L.map('map').setView([-12.046374, -77.042793], 6);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        // CONFIGURACIÓN DE DATOS (ESTRUCTURA MODELO ESTRELLA)
+        const SHEET_URL = 'URL_DE_TU_APPS_SCRIPT'; // Reemplazar con URL real
+        let allData = []; // Datos crudos de la hoja
+        let filteredData = [];
         
-        const locations = [
-            { name: "Lima (Sede Central)", coords: [-12.046, -77.042] },
-            { name: "Pasco (Minería)", coords: [-10.683, -76.256] },
-            { name: "Huamachuco", coords: [-7.813, -78.049] },
-            { name: "Lurín (Patio)", coords: [-12.277, -76.871] }
-        ];
+        const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        let monthlyChart, paretoChart, map;
 
-        locations.forEach(loc => {
-            L.circleMarker(loc.coords, {
-                color: '#2563eb',
-                fillColor: '#3b82f6',
-                fillOpacity: 0.5,
-                radius: 8
-            }).addTo(map).bindPopup(`<b>${loc.name}</b>`);
-        });
+        // 1. INICIALIZACIÓN
+        async function init() {
+            // Datos de prueba (Simulando respuesta de Google Sheets)
+            allData = [
+                { fecha: '2026-01-15', contractor: 'ELEFANTE', monto: 35200, status: 'Ejecutado', destino: 'PASCO', modelo: 'L120H', lat: -10.68, lon: -76.25, t2025: 4100, t2026: 4500 },
+                { fecha: '2026-02-10', contractor: 'MECHE', monto: 63000, status: 'Ejecutado', destino: 'HUAMACHUCO', modelo: 'L150H', lat: -7.81, lon: -78.04, t2025: 3850, t2026: 4000 },
+                { fecha: '2026-03-05', contractor: 'ELEFANTE', monto: 24600, status: 'Ejecutado', destino: 'LIMA', modelo: 'EC360', lat: -12.04, lon: -77.04, t2025: 550, t2026: 600 },
+                { fecha: '2026-03-12', contractor: 'HUERE', monto: 50700, status: 'Anulado', destino: 'NASCA', modelo: 'EC380', lat: -14.83, lon: -74.93, t2025: 660, t2026: 710 },
+                { fecha: '2025-12-20', contractor: 'PORTILLA', monto: 15000, status: 'Ejecutado', destino: 'LIMA', modelo: 'L120H', lat: -12.04, lon: -77.04, t2025: 4000, t2026: 4000 }
+            ];
 
-        // Función de Ordenamiento de Tabla (Sección 6)
-        function sortTable(n) {
-            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-            table = document.getElementById("tarifasTable");
-            switching = true;
-            dir = "asc";
-            while (switching) {
-                switching = false;
-                rows = table.rows;
-                for (i = 1; i < (rows.length - 1); i++) {
-                    shouldSwitch = false;
-                    x = rows[i].getElementsByTagName("TD")[n];
-                    y = rows[i + 1].getElementsByTagName("TD")[n];
-                    
-                    let xVal = x.innerHTML.replace(/[$,%+]/g, '').trim();
-                    let yVal = y.innerHTML.replace(/[$,%+]/g, '').trim();
-
-                    if (dir == "asc") {
-                        if (isNaN(xVal)) {
-                            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) { shouldSwitch = true; break; }
-                        } else {
-                            if (parseFloat(xVal) > parseFloat(yVal)) { shouldSwitch = true; break; }
-                        }
-                    } else if (dir == "desc") {
-                        if (isNaN(xVal)) {
-                            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) { shouldSwitch = true; break; }
-                        } else {
-                            if (parseFloat(xVal) < parseFloat(yVal)) { shouldSwitch = true; break; }
-                        }
-                    }
-                }
-                if (shouldSwitch) {
-                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                    switching = true;
-                    switchcount ++;
-                } else {
-                    if (switchcount == 0 && dir == "asc") {
-                        dir = "desc";
-                        switching = true;
-                    }
-                }
-            }
+            setupYears();
+            initCharts();
+            initMap();
+            applyFilters();
         }
+
+        // 2. LÓGICA DE FILTROS SINCRONIZADOS
+        function setupYears() {
+            const years = [...new Set(allData.map(d => new Date(d.fecha).getFullYear()))].sort((a,b) => b-a);
+            const select = document.getElementById('yearFilter');
+            select.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+            syncMonthsWithData();
+        }
+
+        function syncMonthsWithData() {
+            const selectedYear = document.getElementById('yearFilter').value;
+            const availableMonths = [...new Set(allData
+                .filter(d => new Date(d.fecha).getFullYear() == selectedYear)
+                .map(d => new Date(d.fecha).getMonth())
+            )].sort((a,b) => a-b);
+
+            const container = document.getElementById('monthsList');
+            container.innerHTML = availableMonths.map(m => `
+                <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer">
+                    <input type="checkbox" checked value="${m}" onchange="applyFilters()" class="month-cb w-4 h-4 rounded text-blue-600">
+                    <span class="text-sm font-semibold text-slate-600">${monthNames[m]}</span>
+                </label>
+            `).join('');
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const year = document.getElementById('yearFilter').value;
+            const selectedMonths = Array.from(document.querySelectorAll('.month-cb:checked')).map(cb => parseInt(cb.value));
+
+            filteredData = allData.filter(d => {
+                const date = new Date(d.fecha);
+                return date.getFullYear() == year && selectedMonths.includes(date.getMonth());
+            });
+
+            updateUI();
+        }
+
+        // 3. ACTUALIZACIÓN DE INTERFAZ (UI)
+        function updateUI() {
+            // KPIs
+            const ejecutado = filteredData.filter(d => d.status === 'Ejecutado').reduce((acc, d) => acc + d.monto, 0);
+            const anulado = filteredData.filter(d => d.status === 'Anulado').reduce((acc, d) => acc + d.monto, 0);
+            
+            document.getElementById('kpi-ejecutado').innerText = `$ ${ejecutado.toLocaleString()}`;
+            document.getElementById('kpi-anulado').innerText = `$ ${anulado.toLocaleString()}`;
+            document.getElementById('kpi-vigente').innerText = `$ ${(ejecutado + anulado).toLocaleString()}`;
+            
+            updateMonthlyChart();
+            updateParetoChart();
+            updateTable();
+            updateMap();
+        }
+
+        // 4. COMPONENTES VISUALES
+        function initCharts() {
+            // Gráfico Mensual
+            monthlyChart = new Chart(document.getElementById('monthlyChart'), {
+                type: 'bar',
+                data: { labels: [], datasets: [] },
+                options: { 
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        datalabels: { anchor: 'end', align: 'top', font: { size: 10, weight: 'bold' }, formatter: v => v + 'k' }
+                    }
+                }
+            });
+
+            // Pareto
+            paretoChart = new Chart(document.getElementById('paretoChart'), {
+                type: 'bar',
+                data: { labels: [], datasets: [] },
+                options: { 
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { y1: { position: 'right', max: 110 } }
+                }
+            });
+        }
+
+        function updateMonthlyChart() {
+            const monthsInFilter = [...new Set(filteredData.map(d => new Date(d.fecha).getMonth()))].sort((a,b) => a-b);
+            const labels = monthsInFilter.map(m => monthNames[m].toUpperCase());
+            
+            const facturadoData = monthsInFilter.map(m => 
+                filteredData.filter(d => new Date(d.fecha).getMonth() === m && d.status === 'Ejecutado').reduce((acc, d) => acc + d.monto, 0) / 1000
+            );
+
+            monthlyChart.data.labels = labels;
+            monthlyChart.data.datasets = [{
+                label: 'Facturado',
+                data: facturadoData,
+                backgroundColor: '#2563eb',
+                borderRadius: 5
+            }];
+            monthlyChart.update();
+        }
+
+        function updateParetoChart() {
+            const contractors = {};
+            filteredData.forEach(d => {
+                contractors[d.contractor] = (contractors[d.contractor] || 0) + d.monto;
+            });
+
+            const sorted = Object.entries(contractors).sort((a,b) => b[1] - a[1]);
+            const labels = sorted.map(s => s[0]);
+            const amounts = sorted.map(s => s[1]);
+            
+            const total = amounts.reduce((a,b) => a+b, 0);
+            let cum = 0;
+            const cumPercent = amounts.map(a => {
+                cum += a;
+                return ((cum / total) * 100).toFixed(1);
+            });
+
+            paretoChart.data.labels = labels;
+            paretoChart.data.datasets = [
+                { type: 'line', label: '% Acumulado', data: cumPercent, yAxisID: 'y1', borderColor: '#ef4444', datalabels: { display: false } },
+                { type: 'bar', label: 'Monto', data: amounts, backgroundColor: '#3b82f6', borderRadius: 4 }
+            ];
+            paretoChart.update();
+        }
+
+        function updateTable() {
+            const body = document.getElementById('tableBody');
+            body.innerHTML = filteredData.map(d => `
+                <tr>
+                    <td class="p-3">${d.destino}</td>
+                    <td class="p-3">${d.modelo}</td>
+                    <td class="p-3 text-right">$ ${d.t2025.toLocaleString()}</td>
+                    <td class="p-3 text-right font-bold">$ ${d.t2026.toLocaleString()}</td>
+                    <td class="p-3 text-center font-bold text-emerald-600">+${(((d.t2026/d.t2025)-1)*100).toFixed(1)}%</td>
+                </tr>
+            `).join('');
+        }
+
+        function initMap() {
+            map = L.map('map', { zoomControl: false }).setView([-9.19, -75.01], 5);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
+        }
+
+        function updateMap() {
+            if (!map) return;
+            map.eachLayer(layer => { if(layer instanceof L.CircleMarker) map.removeLayer(layer); });
+            const group = L.featureGroup();
+            filteredData.forEach(d => {
+                const m = L.circleMarker([d.lat, d.lon], { radius: 7, color: '#3b82f6', fillOpacity: 0.8 }).addTo(map);
+                m.bindPopup(`<b>${d.destino}</b><br>$${d.monto.toLocaleString()}`);
+                group.addLayer(m);
+            });
+            if (filteredData.length > 0) map.fitBounds(group.getBounds().pad(0.5));
+        }
+
+        // UTILIDADES UI
+        function toggleMonthDropdown() { document.getElementById('monthDropdown').classList.toggle('hidden'); }
+        function handleSelectAll(src) {
+            document.querySelectorAll('.month-cb').forEach(cb => cb.checked = src.checked);
+            applyFilters();
+        }
+        window.onclick = e => { if(!e.target.closest('#monthDropdownContainer')) document.getElementById('monthDropdown').classList.add('hidden'); }
+
+        init();
     </script>
 </body>
 </html>
