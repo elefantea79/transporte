@@ -34,7 +34,7 @@
                         <p class="text-slate-400 font-medium">Gestión de Transporte y Logística Especializada</p>
                     </div>
                     <div class="bg-blue-600 px-4 py-2 rounded-lg font-bold text-sm tracking-widest uppercase">
-                        Datos Validados
+                        Datos Validados (Excel)
                     </div>
                 </div>
                 
@@ -44,16 +44,16 @@
                         <p class="text-3xl font-black">$ 150,005</p>
                     </div>
                     <div class="border-l-4 border-emerald-500 pl-4">
-                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Ejecutado Q1 (Fact+OC)</p>
-                        <p class="text-3xl font-black text-emerald-400">$ 141,805</p>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Facturado Q1</p>
+                        <p class="text-3xl font-black text-emerald-400">$ 127,708</p>
                     </div>
                     <div class="border-l-4 border-amber-500 pl-4">
-                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Por Confirmar (Marzo)</p>
-                        <p class="text-3xl font-black text-amber-400">$ 8,200</p>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Pndt OC / Confirmar Q1</p>
+                        <p class="text-3xl font-black text-amber-400">$ 22,297</p>
                     </div>
                     <div class="border-l-4 border-red-500 pl-4">
-                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Anulado (Marzo)</p>
-                        <p class="text-3xl font-black text-red-400">$ 50,700</p>
+                        <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Anulado Q1</p>
+                        <p class="text-3xl font-black text-red-400">$ 128,146</p>
                     </div>
                 </div>
             </div>
@@ -127,6 +127,11 @@
                                 <td><span class="badge-elefante">ELEFANTE</span></td>
                                 <td class="text-right font-black">$ 400</td>
                             </tr>
+                            <tr>
+                                <td class="font-bold text-slate-400">Otros Destinos</td>
+                                <td><span class="badge-tercero text-slate-400">VARIOS</span></td>
+                                <td class="text-right font-black text-slate-400">$ 21,419</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -150,14 +155,10 @@
 
         const months = ['ENERO', 'FEBRERO', 'MARZO'];
         
-        // Datos calculados según el Filtro: Fecha No Nula y Estado != 'ANULADO'
-        const dataCotizaciones = [35.2, 63.0, 51.9]; 
-        
-        // Datos facturados reales
-        const dataFacturado = [35.2, 63.0, 24.6]; 
-        
-        // Datos Anulados excluidos de la cotización
-        const dataAnulado = [21.6, 56.3, 50.7];
+        // Datos filtrados de forma estricta por Estado y Fecha
+        const dataCotizaciones = [35.2, 63.0, 51.9]; // Total: ~150.0k
+        const dataFacturado = [35.2, 63.0, 29.5];    // Total: ~127.7k
+        const dataAnulado = [21.6, 56.3, 50.3];      // Total: ~128.1k
 
         new Chart(ctx, {
             type: 'bar',
@@ -232,7 +233,7 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-                        max: 90, // Ajustado para el nuevo pico máximo de 63k
+                        max: 80, 
                         ticks: { font: { size: 10, weight: 'bold' }, callback: v => v + 'k' },
                         grid: { borderDash: [4, 4], drawBorder: false }
                     },
