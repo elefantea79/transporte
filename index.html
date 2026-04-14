@@ -38,7 +38,7 @@
                         <p class="text-slate-400 font-medium">Gestión de Transporte y Logística Especializada</p>
                     </div>
                     
-                    <!-- MENÚS DESPLEGABLES CON MULTISELECCIÓN -->
+                    <!-- MENÚS DESPLEGABLES -->
                     <div class="flex items-center gap-3">
                         <div class="hidden md:block bg-blue-600 px-4 py-2 rounded-lg font-bold text-sm tracking-widest uppercase shadow-lg">
                             Reporte Operativo
@@ -150,27 +150,77 @@
 
         <!-- SECCIÓN DE TABLA Y MAPA -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- NUEVA TABLA CON KM Y COSTOS REALES (FLETE + ESCOLTA 2025) -->
             <div class="col-span-12 lg:col-span-7 kpi-card overflow-hidden p-0 flex flex-col">
                 <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
-                    <h3 class="font-bold text-slate-800 text-sm uppercase tracking-tight">Comparación de Tarifas 2025 vs 2026</h3>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm uppercase tracking-tight">Comparación Costo Real 2025 vs 2026</h3>
+                        <p class="text-[10px] text-slate-500 font-medium mt-1">* 2025 incluye Flete + Escolta real (Conv. S/3.35). Distancias estimadas.</p>
+                    </div>
                     <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">ORDENABLE POR COLUMNA</span>
                 </div>
                 <div class="overflow-x-auto flex-grow">
-                    <table class="w-full text-[11px] text-left" id="tarifasTable">
+                    <table class="w-full text-[11px] text-left whitespace-nowrap" id="tarifasTable">
                         <thead class="bg-slate-100 text-slate-500 uppercase font-black">
                             <tr>
-                                <th class="p-3 border-b" onclick="sortTable(0)">Destino ↑↓</th>
-                                <th class="p-3 border-b" onclick="sortTable(1)">Modelo ↑↓</th>
-                                <th class="p-3 border-b text-right" onclick="sortTable(2)">Tarifa 2025 ↑↓</th>
-                                <th class="p-3 border-b text-right" onclick="sortTable(3)">Tarifa 2026 ↑↓</th>
-                                <th class="p-3 border-b text-center text-emerald-600">% Var ↑↓</th>
+                                <th class="p-3 border-b hover:bg-slate-200 transition-colors" onclick="sortTable(0)">Destino ↑↓</th>
+                                <th class="p-3 border-b hover:bg-slate-200 transition-colors" onclick="sortTable(1)">Modelo ↑↓</th>
+                                <th class="p-3 border-b text-center hover:bg-slate-200 transition-colors" onclick="sortTable(2)">Distancia ↑↓</th>
+                                <th class="p-3 border-b text-right hover:bg-slate-200 transition-colors" onclick="sortTable(3)">Total Real 2025 ↑↓</th>
+                                <th class="p-3 border-b text-right hover:bg-slate-200 transition-colors" onclick="sortTable(4)">Costo 2026 ↑↓</th>
+                                <th class="p-3 border-b text-center text-emerald-600 hover:bg-slate-200 transition-colors" onclick="sortTable(5)">% Var ↑↓</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
-                            <tr><td class="p-3">LIMA - PASCO</td><td class="p-3">L120H</td><td class="p-3 text-right">$ 4,100</td><td class="p-3 text-right font-bold">$ 4,500</td><td class="p-3 text-center font-bold text-emerald-600">+9.7%</td></tr>
-                            <tr><td class="p-3">LIMA - HUAMACHUCO</td><td class="p-3">L150H</td><td class="p-3 text-right">$ 3,850</td><td class="p-3 text-right font-bold">$ 4,000</td><td class="p-3 text-center font-bold text-emerald-600">+3.9%</td></tr>
-                            <tr><td class="p-3">STA ANITA - LURIN</td><td class="p-3">EC360</td><td class="p-3 text-right">$ 550</td><td class="p-3 text-right font-bold">$ 600</td><td class="p-3 text-center font-bold text-emerald-600">+9.1%</td></tr>
-                            <tr><td class="p-3">TVC - TVS</td><td class="p-3">EC380</td><td class="p-3 text-right">$ 660</td><td class="p-3 text-right font-bold">$ 710</td><td class="p-3 text-center font-bold text-emerald-600">+7.6%</td></tr>
+                            <tr>
+                                <td class="p-3">TVC - TVS (Sta Anita-Lurin)</td>
+                                <td class="p-3">EC380DL</td>
+                                <td class="p-3 text-center text-slate-500">40 km</td>
+                                <td class="p-3 text-right">$ 660</td>
+                                <td class="p-3 text-right font-bold">$ 710</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+7.5%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">LIMA - CUSCO</td>
+                                <td class="p-3">L958F</td>
+                                <td class="p-3 text-center text-slate-500">1,100 km</td>
+                                <td class="p-3 text-right">$ 4,400</td>
+                                <td class="p-3 text-right font-bold">$ 4,650</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+5.7%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">LIMA - JULIACA</td>
+                                <td class="p-3">L150H</td>
+                                <td class="p-3 text-center text-slate-500">1,250 km</td>
+                                <td class="p-3 text-right">$ 5,100</td>
+                                <td class="p-3 text-right font-bold">$ 5,300</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+3.9%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">TVS - OROYA</td>
+                                <td class="p-3">SDLG L958F</td>
+                                <td class="p-3 text-center text-slate-500">200 km</td>
+                                <td class="p-3 text-right">$ 1,850</td>
+                                <td class="p-3 text-right font-bold">$ 1,980</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+7.0%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">LURIN - TRUJILLO</td>
+                                <td class="p-3">EC380DL</td>
+                                <td class="p-3 text-center text-slate-500">580 km</td>
+                                <td class="p-3 text-right">$ 3,352</td>
+                                <td class="p-3 text-right font-bold">$ 3,600</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+7.4%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">TVS - APURIMAC</td>
+                                <td class="p-3">EC380DL</td>
+                                <td class="p-3 text-center text-slate-500">900 km</td>
+                                <td class="p-3 text-right">$ 6,200</td>
+                                <td class="p-3 text-right font-bold">$ 6,550</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+5.6%</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -198,13 +248,13 @@
         // DICCIONARIO DE COORDENADAS (GEOLOCALIZACIÓN PERÚ)
         // ==========================================
         const coordGeograficas = {
-            "LURIN": [-12.277, -76.871],
-            "STA ANITA": [-12.043, -76.953],
-            "LIMA": [-12.046, -77.042],
-            "CALLAO": [-12.056, -77.118],
-            "CHALHUANCA": [-14.296, -73.253],
-            "JULIACA": [-15.489, -70.154],
-            "PASCO": [-10.684, -76.256],
+            "LURIN":[-12.277, -76.871],
+            "STA ANITA":[-12.043, -76.953],
+            "LIMA":[-12.046, -77.042],
+            "CALLAO":[-12.056, -77.118],
+            "CHALHUANCA":[-14.296, -73.253],
+            "JULIACA":[-15.489, -70.154],
+            "PASCO":[-10.684, -76.256],
             "CUSCO":[-13.531, -71.967],
             "AREQUIPA":[-16.409, -71.537],
             "TRUJILLO":[-8.109, -79.021],
@@ -228,27 +278,22 @@
 
             // --- MARZO 2026 ---
             { year: '2026', month: 2, contratista: 'ELEFANTE', estado: 'FACTURADO', monto: 14600, fechaCotizacion: '2026-03-01', fechaFin: '2026-03-05', viajes: 7, ruta: 'LURIN-JULIACA' },
-            // REGLA: "EN PROCESO"
             { year: '2026', month: 2, contratista: 'MECHE', estado: 'En Proceso', monto: 10000, fechaCotizacion: '2026-03-02', fechaFin: '2026-03-06', viajes: 4, ruta: 'PUERTO APM-TVC' },
-            // REGLA: "POR CONFIRMAR"
             { year: '2026', month: 2, contratista: 'HUERE', estado: 'Por confirmar', monto: 27300, fechaCotizacion: '2026-03-10', fechaFin: '', viajes: 8, ruta: 'LURIN-TRUJILLO' },
-            // REGLA: "ANULADO"
             { year: '2026', month: 2, contratista: 'CRISTO M.', estado: 'ANULADO', monto: 50700, fechaCotizacion: '2026-03-12', fechaFin: '', viajes: 0, ruta: 'LIMA-LA OROYA' }
         ];
 
-        // 2. FUNCIÓN PRINCIPAL DE PROCESAMIENTO (REGLAS DE NEGOCIO Y DIBUJO)
         function procesarDatos() {
             const selYears = Array.from(document.querySelectorAll('.year-cb:checked')).map(cb => cb.value);
             const selMonths = Array.from(document.querySelectorAll('.m-chk:checked')).map(cb => parseInt(cb.value));
 
             let totalEjecutado = 0, totalPorConfirmar = 0, totalAnulado = 0;
             let dataMensual = {}, dataParetoMonto = {}, dataParetoViajes = {};
-            let rutasEjecutadasMap = new Set(); // Guardará las rutas a dibujar
+            let rutasEjecutadasMap = new Set(); 
 
             googleSheetData.forEach(fila => {
                 if (selYears.includes(fila.year) && selMonths.includes(fila.month)) {
                     
-                    // VALIDACIÓN DE REGLAS DE NEGOCIO
                     const tieneFechaCot = fila.fechaCotizacion && fila.fechaCotizacion.trim() !== '';
                     const tieneFechaFin = fila.fechaFin && fila.fechaFin.trim() !== '';
 
@@ -257,14 +302,11 @@
                     const esFacturado = (fila.estado === 'FACTURADO');
                     const esAnulado = (fila.estado === 'ANULADO');
 
-                    // ACUMULAR PARA KPIs
                     let montoEjecutado = 0, montoPorConfirmar = 0, montoAnulado = 0;
 
                     if (esFacturado || esEnProceso) {
                         montoEjecutado = fila.monto;
                         totalEjecutado += montoEjecutado;
-                        
-                        // Añadimos a rutas del mapa solo si está "Ejecutado" o "En Proceso"
                         if(fila.ruta) rutasEjecutadasMap.add(fila.ruta);
                     }
                     if (esPorConfirmar) {
@@ -276,13 +318,11 @@
                         totalAnulado += montoAnulado;
                     }
 
-                    // ACUMULAR PARA MENSUAL
                     if (!dataMensual[fila.month]) dataMensual[fila.month] = { cotizacion: 0, facturado: 0, anulado: 0 };
                     dataMensual[fila.month].cotizacion += (montoEjecutado + montoPorConfirmar);
                     dataMensual[fila.month].facturado += montoEjecutado;
                     dataMensual[fila.month].anulado += montoAnulado;
 
-                    // ACUMULAR PARA PARETO
                     if (esFacturado || esEnProceso || esPorConfirmar) {
                         dataParetoMonto[fila.contratista] = (dataParetoMonto[fila.contratista] || 0) + fila.monto;
                         dataParetoViajes[fila.contratista] = (dataParetoViajes[fila.contratista] || 0) + fila.viajes;
@@ -290,13 +330,11 @@
                 }
             });
 
-            // 3. ACTUALIZAR KPIs
             document.getElementById('kpi-cotizaciones').innerText = '$ ' + (totalEjecutado + totalPorConfirmar).toLocaleString('en-US', {maximumFractionDigits:0});
             document.getElementById('kpi-ejecutado').innerText = '$ ' + totalEjecutado.toLocaleString('en-US', {maximumFractionDigits:0});
             document.getElementById('kpi-confirmar').innerText = '$ ' + totalPorConfirmar.toLocaleString('en-US', {maximumFractionDigits:0});
             document.getElementById('kpi-anulado').innerText = '$ ' + totalAnulado.toLocaleString('en-US', {maximumFractionDigits:0});
 
-            // 4. ACTUALIZAR GRÁFICOS
             if (monthlyChart) {
                 const mesesOrdenados = selMonths.sort((a,b) => a - b);
                 monthlyChart.data.labels = mesesOrdenados.map(m => monthNames[m]);
@@ -328,17 +366,12 @@
                 paretoChart.update();
             }
 
-            // 5. ACTUALIZAR MAPA (Rutas Ejecutadas Dinámicas)
             dibujarRutasMapa(Array.from(rutasEjecutadasMap));
         }
 
-        // ==========================================
-        // DIBUJO DINÁMICO EN EL MAPA LEAFLET
-        // ==========================================
         function dibujarRutasMapa(rutas) {
             if(!map) return;
             mapLayerGroup.clearLayers();
-
             let trazadosVisuales = new Set();
 
             rutas.forEach(rutaDesc => {
@@ -347,57 +380,42 @@
                     let origen = partes[0].trim();
                     let destino = partes[1].trim();
 
-                    // TRADUCTOR DE JERGA DE VOLVO
                     if(origen === 'TVS') origen = 'LURIN';
                     if(origen === 'TVC') origen = 'STA ANITA';
                     if(origen === 'PUERTO APM') origen = 'CALLAO';
-                    
                     if(destino === 'TVS') destino = 'LURIN';
                     if(destino === 'TVC') destino = 'STA ANITA';
                     if(destino === 'PUERTO APM') destino = 'CALLAO';
 
-                    let cOri = coordGeograficas[origen] || coordGeograficas['LIMA']; // Fallback a Lima
+                    let cOri = coordGeograficas[origen] || coordGeograficas['LIMA']; 
                     let cDes = coordGeograficas[destino];
 
                     if(cOri && cDes) {
                         let uniqueKey = origen + '-' + destino;
                         if(!trazadosVisuales.has(uniqueKey)) {
                             trazadosVisuales.add(uniqueKey);
-
-                            // Punto Origen (Gris Oscuro)
                             L.circleMarker(cOri, { radius: 5, fillColor: "#1e293b", color: "#fff", weight: 2, fillOpacity: 1 })
-                                .bindPopup(`<div class="text-xs"><b>Origen:</b> ${origen}</div>`)
-                                .addTo(mapLayerGroup);
-                            
-                            // Punto Destino (Azul)
+                                .bindPopup(`<div class="text-xs"><b>Origen:</b> ${origen}</div>`).addTo(mapLayerGroup);
                             L.circleMarker(cDes, { radius: 5, fillColor: "#3b82f6", color: "#fff", weight: 2, fillOpacity: 1 })
-                                .bindPopup(`<div class="text-xs"><b>Destino:</b> ${destino}</div>`)
-                                .addTo(mapLayerGroup);
-
-                            // Línea de Ruta (Punteada Azul)
-                            L.polyline([cOri, cDes], { color: '#3b82f6', weight: 2, opacity: 0.7, dashArray: '6, 6' })
-                                .addTo(mapLayerGroup);
+                                .bindPopup(`<div class="text-xs"><b>Destino:</b> ${destino}</div>`).addTo(mapLayerGroup);
+                            L.polyline([cOri, cDes], { color: '#3b82f6', weight: 2, opacity: 0.7, dashArray: '6, 6' }).addTo(mapLayerGroup);
                         }
                     }
                 }
             });
 
-            // Auto-Ajustar zoom para ver todas las rutas trazadas
             if(mapLayerGroup.getLayers().length > 0) {
                 map.fitBounds(mapLayerGroup.getBounds().pad(0.2));
             } else {
-                map.setView([-9.19, -75.01], 5); // Vista Perú por defecto si no hay data
+                map.setView([-9.19, -75.01], 5); 
             }
         }
 
-        // ==========================================
-        // INICIALIZACIÓN (GRÁFICOS, MAPA Y EVENTOS)
-        // ==========================================
         function inicializarGraficos() {
             const ctxMonthly = document.getElementById('monthlyChart').getContext('2d');
             monthlyChart = new Chart(ctxMonthly, {
                 type: 'bar',
-                data: { labels:[], datasets: [
+                data: { labels:[], datasets:[
                     { label: 'Cotización', data: [], backgroundColor: '#e2e8f0', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8 },
                     { label: 'Facturado', data:[], backgroundColor: '#2563eb', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8 },
                     { label: 'Anulado', data:[], backgroundColor: '#f87171', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8 },
@@ -468,19 +486,16 @@
         function initMap() {
             map = L.map('map', { zoomControl: true }).setView([-9.19, -75.01], 5);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
-            // Creamos un grupo donde guardaremos las líneas/marcadores para poder limpiarlos dinámicamente
             mapLayerGroup = L.featureGroup().addTo(map); 
-            
-            // Disparar procesamiento final (Dibuja los gráficos y el mapa)
             procesarDatos();
         }
 
         window.onload = function() {
+            Chart.register(ChartDataLabels);
             inicializarGraficos();
             initMap();
         };
 
-        // UI de los Menús
         document.addEventListener('click', function(event) {
             if (!event.target.closest('.dropdown-container')) {
                 document.getElementById('yearDrop').classList.add('hidden');
@@ -493,18 +508,26 @@
             procesarDatos();
         }
 
-        // Ordenar Tabla HTML (Estática)
+        // Ordenamiento actualizado para soportar el formato numérico y de string ("km", "$", "%", etc.)
         function sortTable(n) {
             var table = document.getElementById("tarifasTable"), rows, switching = true, i, x, y, shouldSwitch, dir = "asc", switchcount = 0;
             while (switching) {
                 switching = false; rows = table.rows;
                 for (i = 1; i < (rows.length - 1); i++) {
-                    shouldSwitch = false; x = rows[i].getElementsByTagName("TD")[n]; y = rows[i + 1].getElementsByTagName("TD")[n];
-                    let xVal = x.innerHTML.replace(/[$,%+]/g, '').trim(), yVal = y.innerHTML.replace(/[$,%+]/g, '').trim();
+                    shouldSwitch = false; 
+                    x = rows[i].getElementsByTagName("TD")[n]; 
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    
+                    // Nueva limpieza por Regex (Soporta '$', '%', 'km', ',' y espacios)
+                    let xVal = x.innerHTML.replace(/[$,%+ kmKM]/g, '').trim(); 
+                    let yVal = y.innerHTML.replace(/[$,%+ kmKM]/g, '').trim();
+                    
                     if (dir == "asc") {
-                        if (isNaN(xVal) ? (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) : (parseFloat(xVal) > parseFloat(yVal))) { shouldSwitch = true; break; }
+                        if (isNaN(xVal) || xVal === "") { if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) { shouldSwitch = true; break; } } 
+                        else { if (parseFloat(xVal) > parseFloat(yVal)) { shouldSwitch = true; break; } }
                     } else if (dir == "desc") {
-                        if (isNaN(xVal) ? (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) : (parseFloat(xVal) < parseFloat(yVal))) { shouldSwitch = true; break; }
+                        if (isNaN(xVal) || xVal === "") { if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) { shouldSwitch = true; break; } } 
+                        else { if (parseFloat(xVal) < parseFloat(yVal)) { shouldSwitch = true; break; } }
                     }
                 }
                 if (shouldSwitch) { rows[i].parentNode.insertBefore(rows[i + 1], rows[i]); switching = true; switchcount++; }
