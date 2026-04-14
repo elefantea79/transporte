@@ -49,11 +49,9 @@
                             Reporte Operativo
                         </div>
 
-                        <!-- Dropdown AÑO -->
                         <div class="relative dropdown-container">
                             <button onclick="document.getElementById('yearDrop').classList.toggle('hidden')" class="bg-white/10 hover:bg-white/20 border border-white/10 px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 transition-colors">
-                                Filtrar Año
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                Filtrar Año <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
                             <div id="yearDrop" class="hidden absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-2xl border border-slate-200 z-[100] text-slate-800">
                                 <div class="p-2 space-y-1">
@@ -63,11 +61,9 @@
                             </div>
                         </div>
 
-                        <!-- Dropdown MES -->
                         <div class="relative dropdown-container">
                             <button onclick="document.getElementById('monthDrop').classList.toggle('hidden')" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 transition-colors shadow-lg shadow-blue-500/30">
-                                Filtrar Meses
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                Filtrar Meses <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
                             <div id="monthDrop" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl border border-slate-200 z-[100] text-slate-800">
                                 <div class="p-3 border-b border-slate-100 bg-slate-50 rounded-t-xl">
@@ -77,19 +73,18 @@
                                     </label>
                                 </div>
                                 <div class="p-2 max-h-60 overflow-y-auto style-scrollbar space-y-1">
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="0" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Enero</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="1" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Febrero</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="2" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Marzo</span></label>
-                                    <!-- ABRIL AHORA ESTÁ MARCADO POR DEFECTO -->
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="3" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Abril</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="4" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Mayo</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="5" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Junio</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="6" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Julio</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="7" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Agosto</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="8" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Septiembre</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="9" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Octubre</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="10" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Noviembre</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="11" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Diciembre</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="0" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Enero</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="1" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Febrero</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="2" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Marzo</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="3" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Abril</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="4" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Mayo</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="5" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Junio</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="6" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Julio</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="7" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Agosto</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="8" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Septiembre</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="9" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Octubre</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="10" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Noviembre</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="11" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Diciembre</span></label>
                                 </div>
                             </div>
                         </div>
@@ -159,8 +154,9 @@
             </div>
         </div>
 
+        <!-- SECCIÓN DE TABLA Y MAPA -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- TABLA HISTÓRICA 2025 vs 2026 -->
+            
             <div class="col-span-12 lg:col-span-7 kpi-card overflow-hidden p-0 flex flex-col">
                 <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
                     <div>
@@ -246,7 +242,6 @@
         </div>
     </div>
 
-    <!-- SCRIPT DEL MOTOR DE PROCESAMIENTO Y CONEXIÓN A GOOGLE SHEETS -->
     <script>
         const monthNames =['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
         let monthlyChart, paretoChart;
@@ -255,53 +250,75 @@
         window.viajesParetoData = {}; 
 
         // ==========================================
-        // 1. DICCIONARIO DE COORDENADAS PARA EL MAPA
+        // DICCIONARIO DE COORDENADAS PARA EL MAPA
         // ==========================================
         const coordGeograficas = {
             "LURÍN":[-12.277, -76.871], "SANTA ANITA":[-12.043, -76.953], "LIMA":[-12.046, -77.042], "CALLAO":[-12.056, -77.118],
             "CHALHUANCA":[-14.296, -73.253], "JULIACA":[-15.489, -70.154], "PASCO":[-10.684, -76.256], "CUSCO":[-13.531, -71.967],
             "AREQUIPA":[-16.409, -71.537], "TRUJILLO":[-8.109, -79.021], "LA OROYA":[-11.518, -75.899], "HUAMACHUCO":[-7.812, -78.049],
             "CHALA":[-15.866, -74.249], "YAUCA":[-15.666, -74.526], "ATE":[-12.028, -76.922], "VMT":[-12.162, -76.943], "PACHACAMAC":[-12.228, -76.858],
-            "MOYOBAMBA":[-6.034, -76.972], "CHICLAYO":[-6.771, -79.840], "ILO":[-17.644, -71.339]
+            "MOYOBAMBA":[-6.034, -76.972], "CHICLAYO":[-6.771, -79.840], "ILO":[-17.644, -71.339], "ABANCAY":[-13.633, -72.881]
         };
 
         // ==========================================
-        // 2. CONEXIÓN EN VIVO A GOOGLE SHEETS (API GVIZ)
+        // CONEXIÓN A GOOGLE SHEETS
         // ==========================================
         const SHEET_ID = '1l9mtpMKH7gkkvILKUY9lYLK4PXh_bzpCidW7mGxnyro';
         const SHEET_NAME = 'COTIZACION 2026';
 
+        // Lector a prueba de balas para formato europeo ($1.000,00) y gringo ($1,000.00)
         function parseAmount(cell) {
             if (!cell) return 0;
-            // Capturar la estructura v o f
-            let strToParse = String(cell.v !== null && cell.v !== undefined ? cell.v : (cell.f || ''));
-            let val = parseFloat(strToParse.replace(/[^\d.-]/g, '')) || 0;
+            if (typeof cell.v === 'number') {
+                let val = cell.v;
+                let formatStr = String(cell.f || '').toUpperCase();
+                if (formatStr.includes('S/') || formatStr.includes('S.')) val = val / 3.35;
+                return val;
+            }
+            let str = String(cell.v || cell.f || '').trim();
+            if (!str) return 0;
             
-            let formatStr = String(cell.f || cell.v || '').toUpperCase();
-            if (formatStr.includes('S/') || formatStr.includes('S.')) val = val / 3.35; 
+            let isSoles = str.toUpperCase().includes('S/') || str.toUpperCase().includes('S.');
+            str = str.replace(/[^\d.,-]/g, '');
+            
+            let lastComma = str.lastIndexOf(',');
+            let lastDot = str.lastIndexOf('.');
+            
+            if (lastComma > lastDot) {
+                str = str.replace(/\./g, '').replace(',', '.');
+            } else {
+                str = str.replace(/,/g, '');
+            }
+            
+            let val = parseFloat(str) || 0;
+            if (isSoles) val = val / 3.35;
             return val;
         }
 
+        // Lector avanzado de fechas de Google Sheets
         function extractDate(cell) {
-            if(!cell) return null;
-            const v = cell.v;
-            if(v && typeof v === 'string' && v.startsWith('Date(')) {
-                const parts = v.match(/Date\((\d+),\s*(\d+),\s*(\d+)/);
+            if (!cell) return null;
+            if (cell.v != null && typeof cell.v === 'string' && cell.v.startsWith('Date(')) {
+                const parts = cell.v.match(/Date\((\d+),\s*(\d+),\s*(\d+)/);
                 if (parts) return new Date(parts[1], parts[2], parts[3]);
             }
             const str = String(cell.f || cell.v || '').trim();
+            if (!str) return null;
             const parts = str.split(/[-/]/);
-            if(parts.length >= 3) {
-                if(parts[2].length === 4) return new Date(parts[2], parts[1]-1, parts[0]);
-                if(parts[0].length === 4) return new Date(parts[0], parts[1]-1, parts[2]);
+            if (parts.length >= 3) {
+                const p0 = parseInt(parts[0], 10);
+                const p1 = parseInt(parts[1], 10);
+                const p2 = parseInt(parts[2], 10);
+                if (String(parts[2]).length === 4) return new Date(p2, p1 - 1, p0);
+                if (String(parts[0]).length === 4) return new Date(p0, p1 - 1, p2);
             }
             return null;
         }
 
         async function fetchRealSheetData() {
             const badge = document.getElementById('last-update');
-            badge.innerText = `Sincronizando...`;
-            badge.className = "bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded-full font-bold border border-emerald-500/30";
+            badge.innerText = `Conectando...`;
+            badge.className = "bg-blue-500/20 text-blue-400 text-[10px] px-2 py-1 rounded-full font-bold border border-blue-500/30 transition-all";
             
             try {
                 const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
@@ -310,36 +327,40 @@
                 const jsonString = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\)/)[1];
                 const data = JSON.parse(jsonString);
 
-                // --- BÚSQUEDA A PRUEBA DE BALAS DE ENCABEZADOS ---
-                // Eliminamos espacios y saltos de linea para que coincida exacto
+                // --- DETECCIÓN INTELIGENTE DE COLUMNAS (A prueba de errores) ---
                 let actualHeaders = data.table.cols.map(c => c && c.label ? String(c.label).replace(/[\s\n]+/g, '').toUpperCase() : '');
-                
                 let startRow = 0;
-                // Si la API no detectó encabezados, buscamos en la fila 0
+                
                 if (actualHeaders.filter(h => h).length < 3 && data.table.rows.length > 0) {
                     actualHeaders = data.table.rows[0].c.map(cell => cell && cell.v ? String(cell.v).replace(/[\s\n]+/g, '').toUpperCase() : '');
                     startRow = 1;
                 }
 
-                // Función auxiliar que busca palabras clave en los encabezados limpios
-                const findCol = (keywords) => actualHeaders.findIndex(h => keywords.some(k => h.includes(k)));
+                // Fallback a los índices exactos de tu tabla por si Google oculta los títulos
+                const findCol = (keywords, fallbackIdx) => {
+                    const idx = actualHeaders.findIndex(h => keywords.some(k => h.includes(k)));
+                    return idx !== -1 ? idx : fallbackIdx;
+                };
                 
-                const iFechaCot = findCol(['FECHACOT', 'FECHACOTI']);
-                const iEstado = findCol(['ESTADO']);
-                const iFechaFin = findCol(['FECHAFIN']);
-                const iDestino2 = findCol(['DESTINO_2', 'DESTINO2']);
-                const iDestino = findCol(['DESTINO']);
-                const iFlete = findCol(['FLETE']);
-                const iEscolta = findCol(['ESCOLTA']);
-                const iContratista = findCol(['RAZONSOCIAL', 'TRANSPORTE', 'CONTRATISTA']);
+                const iFechaCot = findCol(['FECHACOT'], 2);  // Columna C (2)
+                const iDestino = findCol(['DESTINO'], 7);    // Columna H (7)
+                const iDestino2 = findCol(['DESTINO_2', 'DESTINO2'], 8); // Columna I (8)
+                const iFlete = findCol(['FLETE'], 9);        // Columna J (9)
+                const iEscolta = findCol(['ESCOLTA'], 10);   // Columna K (10)
+                const iContratista = findCol(['RAZONSOCIAL', 'TRANSPORTE', 'CONTRATISTA'], 12); // Col M (12)
+                const iFechaFin = findCol(['FECHAFIN'], 15); // Col P (15)
+                const iEstado = findCol(['ESTADO'], 21);     // Col V (21)
 
-                const finalDestinoIdx = iDestino2 !== -1 ? iDestino2 : iDestino;
+                // Si existe la columna oculta DESTINO_2, la prioriza
+                const finalDestinoIdx = (iDestino2 !== -1 && iDestino2 !== iDestino) ? iDestino2 : iDestino;
 
                 let parsedData =[];
 
                 for (let i = startRow; i < data.table.rows.length; i++) {
                     const row = data.table.rows[i];
-                    const getCell = (idx) => idx !== -1 ? row.c[idx] : null;
+                    if (!row || !row.c) continue;
+
+                    const getCell = (idx) => (idx !== -1 && idx < row.c.length) ? row.c[idx] : null;
 
                     const cFechaCot = getCell(iFechaCot);
                     const cFechaFin = getCell(iFechaFin);
@@ -380,10 +401,11 @@
                 const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
                 
                 if(parsedData.length === 0) {
-                    badge.innerText = `Revisar Excel (0 filas lógicas)`;
-                    badge.className = "bg-amber-500/20 text-amber-500 text-[10px] px-2 py-1 rounded-full font-bold border border-amber-500/30";
+                    badge.innerText = `Hoja Vacía / Títulos cambiados`;
+                    badge.className = "bg-amber-500/20 text-amber-500 text-[10px] px-2 py-1 rounded-full font-bold border border-amber-500/30 transition-all";
                 } else {
-                    badge.innerText = `Actualizado: ${timeStr} (${parsedData.length} reg)`;
+                    badge.innerText = `Sincronizado: ${timeStr} (${parsedData.length} reg)`;
+                    badge.className = "bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded-full font-bold border border-emerald-500/30 transition-all";
                 }
 
                 procesarDatos();
@@ -391,13 +413,13 @@
             } catch (error) {
                 console.error("Error al obtener datos:", error);
                 const badge = document.getElementById('last-update');
-                badge.innerText = `Error de Conexión Google`;
-                badge.className = "bg-red-500/20 text-red-400 text-[10px] px-2 py-1 rounded-full font-bold border border-red-500/30";
+                badge.innerText = `Error de Conexión HTTP`;
+                badge.className = "bg-red-500/20 text-red-400 text-[10px] px-2 py-1 rounded-full font-bold border border-red-500/30 transition-all";
             }
         }
 
         // ==========================================
-        // 3. MOTOR DE REGLAS DE NEGOCIO Y GRÁFICOS
+        // MOTOR LÓGICO DE PROCESAMIENTO
         // ==========================================
         function procesarDatos() {
             const selYears = Array.from(document.querySelectorAll('.year-cb:checked')).map(cb => cb.value);
@@ -410,7 +432,7 @@
             googleSheetData.forEach(fila => {
                 if (selYears.includes(fila.year) && selMonths.includes(fila.month)) {
                     
-                    // Lógica Flexible para evitar errores de tipeo
+                    // Condicionales flexibles (Detectan "Facturado", " FACTURADO ", etc)
                     const esPorConfirmar = (fila.estado.includes('CONFIRMAR') && fila.tieneFechaCot);
                     const esEnProceso = (fila.estado.includes('PROCESO') && fila.tieneFechaCot && fila.tieneFechaFin);
                     const esFacturado = (fila.estado.includes('FACTURADO'));
@@ -444,11 +466,13 @@
                 }
             });
 
+            // Reescritura KPIs
             document.getElementById('kpi-cotizaciones').innerText = '$ ' + (totalEjecutado + totalPorConfirmar).toLocaleString('en-US', {maximumFractionDigits:0});
             document.getElementById('kpi-ejecutado').innerText = '$ ' + totalEjecutado.toLocaleString('en-US', {maximumFractionDigits:0});
             document.getElementById('kpi-confirmar').innerText = '$ ' + totalPorConfirmar.toLocaleString('en-US', {maximumFractionDigits:0});
             document.getElementById('kpi-anulado').innerText = '$ ' + totalAnulado.toLocaleString('en-US', {maximumFractionDigits:0});
 
+            // Reescritura Gráfico Mensual
             if (monthlyChart) {
                 const mesesOrdenados = selMonths.sort((a,b) => a - b);
                 monthlyChart.data.labels = mesesOrdenados.map(m => monthNames[m]);
@@ -459,6 +483,7 @@
                 monthlyChart.update();
             }
 
+            // Reescritura Gráfico Pareto
             if (paretoChart) {
                 let arrayPareto = Object.keys(dataParetoMonto).map(k => ({
                     contratista: k, monto: dataParetoMonto[k], viajes: dataParetoViajes[k] 
@@ -483,6 +508,9 @@
             dibujarRutasMapa(Array.from(rutasEjecutadasMap));
         }
 
+        // ==========================================
+        // DIBUJO DE MAPA (CON TRADUCTOR DE RUTAS)
+        // ==========================================
         function dibujarRutasMapa(rutas) {
             if(!map) return;
             mapLayerGroup.clearLayers();
@@ -494,7 +522,7 @@
                     let origen = partes[0].trim();
                     let destino = partes[1].trim();
 
-                    // TRADUCTOR DE ABREVIATURAS
+                    // Traducción LURÍN y SANTA ANITA sin comillas
                     if(origen === 'TVS' || origen === 'LURIN') origen = 'LURÍN';
                     if(origen === 'TVC' || origen === 'STA ANITA') origen = 'SANTA ANITA';
                     if(origen === 'PUERTO APM') origen = 'CALLAO';
@@ -510,10 +538,15 @@
                         let uniqueKey = origen + '-' + destino;
                         if(!trazadosVisuales.has(uniqueKey)) {
                             trazadosVisuales.add(uniqueKey);
+                            
+                            // Formato Nombre Capitalizado ("Santa anita")
+                            let capOri = origen.replace(/\w\S*/g, w => (w.replace(/^\w/, c => c.toUpperCase())));
+                            let capDes = destino.replace(/\w\S*/g, w => (w.replace(/^\w/, c => c.toUpperCase())));
+
                             L.circleMarker(cOri, { radius: 5, fillColor: "#1e293b", color: "#fff", weight: 2, fillOpacity: 1 })
-                                .bindPopup(`<div class="text-xs"><b>Origen:</b> ${origen.charAt(0) + origen.slice(1).toLowerCase()}</div>`).addTo(mapLayerGroup);
+                                .bindPopup(`<div class="text-xs"><b>Origen:</b> ${capOri}</div>`).addTo(mapLayerGroup);
                             L.circleMarker(cDes, { radius: 5, fillColor: "#3b82f6", color: "#fff", weight: 2, fillOpacity: 1 })
-                                .bindPopup(`<div class="text-xs"><b>Destino:</b> ${destino.charAt(0) + destino.slice(1).toLowerCase()}</div>`).addTo(mapLayerGroup);
+                                .bindPopup(`<div class="text-xs"><b>Destino:</b> ${capDes}</div>`).addTo(mapLayerGroup);
                             L.polyline([cOri, cDes], { color: '#3b82f6', weight: 2, opacity: 0.7, dashArray: '6, 6' }).addTo(mapLayerGroup);
                         }
                     }
@@ -528,7 +561,7 @@
         }
 
         // ==========================================
-        // 4. INICIALIZACIÓN DE GRÁFICOS Y EVENTOS
+        // INICIALIZACIÓN Y EVENTOS
         // ==========================================
         function inicializarGraficos() {
             const ctxMonthly = document.getElementById('monthlyChart').getContext('2d');
@@ -613,12 +646,12 @@
             inicializarGraficos();
             initMap();
             
+            // PRIMERA CONEXIÓN EN VIVO
             fetchRealSheetData();
-            // Actualización automática cada 5 minutos (300000ms)
+            // REFRESH CADA 5 MINUTOS
             setInterval(fetchRealSheetData, 300000);
         };
 
-        // Utilidades Menús/Tabla
         document.addEventListener('click', function(event) {
             if (!event.target.closest('.dropdown-container')) {
                 document.getElementById('yearDrop').classList.add('hidden');
