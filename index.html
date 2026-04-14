@@ -34,11 +34,11 @@
             <div class="relative z-50 p-6 md:p-8">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                     <div>
-                        <h1 class="text-3xl font-extrabold tracking-tight">Consolidado Dinámico 2026</h1>
+                        <h1 class="text-3xl font-extrabold tracking-tight">Consolidado Dinámico</h1>
                         <p class="text-slate-400 font-medium flex items-center gap-2">
                             Conectado en Vivo a Google Sheets 
                             <span id="last-update" class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded-full font-bold border border-emerald-500/30 transition-all">
-                                Descargando CSV...
+                                Descargando datos...
                             </span>
                         </p>
                     </div>
@@ -123,7 +123,7 @@
                 <div class="flex justify-between items-center mb-6">
                     <div>
                         <h3 class="font-extrabold text-slate-800 uppercase tracking-tight text-sm">Análisis Comparativo Mensual</h3>
-                        <p class="text-[10px] text-slate-500 font-medium">Valores en miles (k) | Peso % del anulado vs Cotizaciones</p>
+                        <p class="text-[10px] text-slate-500 font-medium">Valores en miles (k) | Solo meses con registros activos</p>
                     </div>
                     <div class="hidden md:flex gap-3 text-[9px] font-black uppercase">
                         <div class="flex items-center gap-1"><span class="w-2 h-2 bg-slate-200 rounded-sm"></span> Cotización</div>
@@ -159,7 +159,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- TABLA ESTÁTICA HISTÓRICA (Intacta) -->
+            <!-- TABLA HISTÓRICA 2025 vs 2026 -->
             <div class="col-span-12 lg:col-span-7 kpi-card overflow-hidden p-0 flex flex-col">
                 <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
                     <div>
@@ -203,7 +203,6 @@
         </div>
     </div>
 
-    <!-- SCRIPT DEFINITIVO DE EXTRACCIÓN Y LÓGICA -->
     <script>
         const monthNames =['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
         let monthlyChart, paretoChart;
@@ -215,19 +214,27 @@
         const url2026 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8YV16DOopheo-MxtKHU-yAmTI1c8eR1LcT75y-51zj8KmEa5DTsdR9toFm93v-oc06v23kwG9qznD/pub?gid=1850210641&single=true&output=csv';
         const url2025 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8YV16DOopheo-MxtKHU-yAmTI1c8eR1LcT75y-51zj8KmEa5DTsdR9toFm93v-oc06v23kwG9qznD/pub?gid=1740143333&single=true&output=csv';
 
+        // ==========================================
+        // DICCIONARIO AMPLIADO DE COORDENADAS 
+        // ==========================================
         const coordGeograficas = {
-            "LURÍN":[-12.277, -76.871], "SANTA ANITA":[-12.043, -76.953], "LIMA":[-12.046, -77.042], "CALLAO":[-12.056, -77.118],
+            "LURÍN":[-12.277, -76.871], "LURIN":[-12.277, -76.871], "SANTA ANITA":[-12.043, -76.953], "STA ANITA":[-12.043, -76.953],
+            "LIMA":[-12.046, -77.042], "CALLAO":[-12.056, -77.118], "APM":[-12.056, -77.118],
             "CHALHUANCA":[-14.296, -73.253], "JULIACA":[-15.489, -70.154], "PASCO":[-10.684, -76.256], "CUSCO":[-13.531, -71.967],
-            "AREQUIPA":[-16.409, -71.537], "TRUJILLO":[-8.109, -79.021], "LA OROYA":[-11.518, -75.899], "HUAMACHUCO":[-7.812, -78.049],
-            "CHALA":[-15.866, -74.249], "YAUCA":[-15.666, -74.526], "ATE":[-12.028, -76.922], "VMT":[-12.162, -76.943], "PACHACAMAC":[-12.228, -76.858],
-            "MOYOBAMBA":[-6.034, -76.972], "CHICLAYO":[-6.771, -79.840], "ILO":[-17.644, -71.339], "ABANCAY":[-13.633, -72.881], "PIURA":[-5.194, -80.632]
+            "AREQUIPA":[-16.409, -71.537], "AQP":[-16.409, -71.537], "TRUJILLO":[-8.109, -79.021], "LA OROYA":[-11.518, -75.899], "OROYA":[-11.518, -75.899],
+            "HUAMACHUCO":[-7.812, -78.049], "CHALA":[-15.866, -74.249], "YAUCA":[-15.666, -74.526], "ATE":[-12.028, -76.922],
+            "VMT":[-12.162, -76.943], "PACHACAMAC":[-12.228, -76.858], "MOYOBAMBA":[-6.034, -76.972], "CHICLAYO":[-6.771, -79.840],
+            "ILO":[-17.644, -71.339], "ABANCAY":[-13.633, -72.881], "PIURA":[-5.194, -80.632], "NAZCA":[-14.835, -74.932],
+            "NASCA":[-14.835, -74.932], "MARCONA":[-15.358, -75.163], "CHILCA":[-12.521, -76.737], "PISCO":[-13.715, -76.204],
+            "ICA":[-14.067, -75.728], "TACNA":[-18.014, -70.251], "TARMA":[-11.418, -75.688], "SAN DAMIAN":[-12.016, -76.393],
+            "SECOCHA":[-15.969, -73.181], "HUACHIPA":[-12.008, -76.901], "JAEN":[-5.708, -78.807], "CAJAMARCA":[-7.161, -78.512],
+            "HUARAZ":[-9.529, -77.528], "SHOUGANG":[-15.263, -75.251]
         };
 
-        // PARSER NATIVO DE CSV PARA EVITAR ERRORES DE GOOGLE SHEETS
+        // PARSER NATIVO DE CSV
         function csvToArray(strData) {
             let objPattern = new RegExp(("(\\,|\\r?\\n|\\r|^)(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|([^\"\\,\\r\\n]*))"), "gi");
-            let arrData = [[]];
-            let arrMatches = null;
+            let arrData = [[]]; let arrMatches = null;
             while (arrMatches = objPattern.exec(strData)) {
                 let strMatchedDelimiter = arrMatches[1];
                 if (strMatchedDelimiter.length && strMatchedDelimiter !== ",") arrData.push([]);
@@ -240,7 +247,7 @@
             return arrData;
         }
 
-        // LIMPIADOR DE MONTOS (Detecta S/, dólares, formatos europeos $1.000,00)
+        // LIMPIADOR DE MONTOS ROBUSTO
         function parseAmount(str) {
             if (!str) return 0;
             str = String(str).trim();
@@ -255,14 +262,14 @@
             
             if (lastComma > lastDot) str = str.replace(/\./g, '').replace(',', '.');
             else if (lastDot > lastComma) str = str.replace(/,/g, '');
-            else if (lastComma !== -1 && lastDot === -1) str = str.replace(',', '.'); // Solo tiene coma
+            else if (lastComma !== -1 && lastDot === -1) str = str.replace(',', '.');
             
             let val = parseFloat(str) || 0;
-            if (isSoles) val = val / 3.35; // Regla de Negocio
+            if (isSoles) val = val / 3.35;
             return val;
         }
 
-        // LECTOR DE FECHAS (Extrae DD/MM/YYYY)
+        // LECTOR DE FECHAS ROBUSTO
         function extractDate(str) {
             if (!str) return null;
             str = String(str).trim();
@@ -278,14 +285,13 @@
             return null;
         }
 
-        // FUNCIÓN PRINCIPAL DE DESCARGA
+        // DESCARGA Y PROCESAMIENTO INICIAL (ELIMINA FILAS BASURA)
         async function fetchRealSheetData() {
             const badge = document.getElementById('last-update');
             badge.innerText = `Descargando...`;
             badge.className = "bg-blue-500/20 text-blue-400 text-[10px] px-2 py-1 rounded-full font-bold border border-blue-500/30 transition-all";
             
             try {
-                // Descargar ambos archivos al mismo tiempo
                 const [res2026, res2025] = await Promise.all([
                     fetch(url2026 + '&t=' + new Date().getTime()), 
                     fetch(url2025 + '&t=' + new Date().getTime())
@@ -296,18 +302,15 @@
 
                 let parsedData =[];
 
-                // Lógica de mapeo para procesar el texto CSV
                 const processCSV = (csvText, forceYear) => {
                     const rows = csvToArray(csvText);
                     if(rows.length < 2) return;
 
-                    // Busca la fila que contiene los encabezados ("ESTADO" y "FLETE")
                     let headerIdx = 0;
                     for(let i=0; i<Math.min(10, rows.length); i++){
                         const rowStr = rows[i].join('').toUpperCase();
                         if(rowStr.includes('ESTADO') && rowStr.includes('FLETE')) {
-                            headerIdx = i;
-                            break;
+                            headerIdx = i; break;
                         }
                     }
 
@@ -327,7 +330,7 @@
 
                     for (let i = headerIdx + 1; i < rows.length; i++) {
                         const row = rows[i];
-                        if(!row || row.length < 5) continue; // saltar filas vacías
+                        if(!row || row.length < 5) continue; 
 
                         const getCell = (idx) => (idx !== -1 && idx < row.length) ? row[idx] : null;
 
@@ -341,28 +344,25 @@
 
                         const dateObj = extractDate(cFechaCot) || extractDate(cFechaFin);
                         
-                        if (dateObj || forceYear) {
-                            let montoTotal = parseAmount(cFlete) + parseAmount(cEscolta);
-                            let estadoStr = cEstado ? String(cEstado).trim().toUpperCase() : '';
-                            let contratistaStr = cContratista ? String(cContratista).trim().toUpperCase() : 'ELEFANTE';
-                            let rutaStr = cDestino ? String(cDestino).trim().toUpperCase() : '';
+                        // REGLA CLAVE PARA EVITAR LAS "1223 FILAS FANTASMAS":
+                        if (!dateObj || isNaN(dateObj.getTime())) continue;
+                        
+                        let montoTotal = parseAmount(cFlete) + parseAmount(cEscolta);
+                        let estadoStr = cEstado ? String(cEstado).trim().toUpperCase() : '';
+                        let contratistaStr = cContratista ? String(cContratista).trim().toUpperCase() : 'ELEFANTE';
+                        let rutaStr = cDestino ? String(cDestino).trim().toUpperCase() : '';
 
-                            let tieneFechaCot = !!extractDate(cFechaCot);
-                            let tieneFechaFin = !!extractDate(cFechaFin);
-                            
-                            let y = dateObj ? String(dateObj.getFullYear()) : forceYear;
-                            let m = dateObj ? dateObj.getMonth() : 0; 
+                        let y = String(dateObj.getFullYear());
+                        let m = dateObj.getMonth(); 
 
-                            parsedData.push({
-                                year: y, month: m, contratista: contratistaStr, estado: estadoStr,
-                                monto: montoTotal, tieneFechaCot: tieneFechaCot, tieneFechaFin: tieneFechaFin,
-                                viajes: 1, ruta: rutaStr
-                            });
-                        }
+                        parsedData.push({
+                            year: y, month: m, contratista: contratistaStr, estado: estadoStr,
+                            monto: montoTotal, tieneFechaCot: !!extractDate(cFechaCot), tieneFechaFin: !!extractDate(cFechaFin),
+                            viajes: 1, ruta: rutaStr
+                        });
                     }
                 };
 
-                // Procesar ambos archivos
                 processCSV(csv2026, '2026');
                 processCSV(csv2025, '2025');
 
@@ -371,15 +371,10 @@
                 const now = new Date();
                 const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
                 
-                if(parsedData.length === 0) {
-                    badge.innerText = `Excel Vacío (0 reg)`;
-                    badge.className = "bg-amber-500/20 text-amber-500 text-[10px] px-2 py-1 rounded-full font-bold border border-amber-500/30 transition-all";
-                } else {
-                    badge.innerText = `Sincronizado: ${timeStr} (${parsedData.length} reg)`;
-                    badge.className = "bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded-full font-bold border border-emerald-500/30 transition-all";
-                }
+                badge.innerText = `Sincronizado: ${timeStr} (${parsedData.length} reg)`;
+                badge.className = "bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded-full font-bold border border-emerald-500/30 transition-all";
 
-                procesarDatos(); // Llenar Gráficos
+                procesarDatos(); 
 
             } catch (error) {
                 console.error("Error al obtener datos:", error);
@@ -441,12 +436,19 @@
             document.getElementById('kpi-confirmar').innerText = '$ ' + totalPorConfirmar.toLocaleString('en-US', {maximumFractionDigits:0});
             document.getElementById('kpi-anulado').innerText = '$ ' + totalAnulado.toLocaleString('en-US', {maximumFractionDigits:0});
 
+            // REGLA PARA EL GRÁFICO MENSUAL: Mostrar SOLO meses con información activa
             if (monthlyChart) {
-                const mesesOrdenados = selMonths.sort((a,b) => a - b);
-                monthlyChart.data.labels = mesesOrdenados.map(m => monthNames[m]);
-                monthlyChart.data.datasets[0].data = mesesOrdenados.map(m => dataMensual[m] ? (dataMensual[m].cotizacion / 1000) : 0);
-                monthlyChart.data.datasets[1].data = mesesOrdenados.map(m => dataMensual[m] ? (dataMensual[m].facturado / 1000) : 0);
-                monthlyChart.data.datasets[2].data = mesesOrdenados.map(m => dataMensual[m] ? (dataMensual[m].anulado / 1000) : 0);
+                let mesesConDatos = selMonths.filter(m => {
+                    return dataMensual[m] && (dataMensual[m].cotizacion > 0 || dataMensual[m].facturado > 0 || dataMensual[m].anulado > 0);
+                }).sort((a,b) => a - b);
+
+                // Si no hay datos, mostramos los seleccionados vacíos por defecto
+                if(mesesConDatos.length === 0) mesesConDatos = selMonths.sort((a,b)=>a-b);
+
+                monthlyChart.data.labels = mesesConDatos.map(m => monthNames[m]);
+                monthlyChart.data.datasets[0].data = mesesConDatos.map(m => dataMensual[m] ? (dataMensual[m].cotizacion / 1000) : 0);
+                monthlyChart.data.datasets[1].data = mesesConDatos.map(m => dataMensual[m] ? (dataMensual[m].facturado / 1000) : 0);
+                monthlyChart.data.datasets[2].data = mesesConDatos.map(m => dataMensual[m] ? (dataMensual[m].anulado / 1000) : 0);
                 monthlyChart.data.datasets[3].data = monthlyChart.data.datasets[0].data; 
                 monthlyChart.update();
             }
@@ -475,35 +477,42 @@
             dibujarRutasMapa(Array.from(rutasEjecutadasMap));
         }
 
+        function obtenerCoordenadaInteligente(nombreUbicacion) {
+            let nombreLimpio = nombreUbicacion.toUpperCase();
+            
+            // Estandarización base
+            if(nombreLimpio.includes('TVS')) nombreLimpio = 'LURÍN';
+            if(nombreLimpio.includes('TVC')) nombreLimpio = 'SANTA ANITA';
+            if(nombreLimpio.includes('APM')) nombreLimpio = 'CALLAO';
+
+            // Búsqueda inteligente
+            for (const key in coordGeograficas) {
+                if (nombreLimpio.includes(key)) return coordGeograficas[key];
+            }
+            return null; // Si no encuentra nada, no fuerza LIMA
+        }
+
         function dibujarRutasMapa(rutas) {
             if(!map) return;
             mapLayerGroup.clearLayers();
             let trazadosVisuales = new Set();
 
             rutas.forEach(rutaDesc => {
-                let partes = rutaDesc.toUpperCase().split('-');
+                let partes = rutaDesc.split('-');
                 if(partes.length >= 2) {
-                    let origen = partes[0].trim();
-                    let destino = partes[1].trim();
+                    let origenStr = partes[0].trim();
+                    let destinoStr = partes[1].trim();
 
-                    if(origen === 'TVS' || origen === 'LURIN') origen = 'LURÍN';
-                    if(origen === 'TVC' || origen === 'STA ANITA') origen = 'SANTA ANITA';
-                    if(origen === 'PUERTO APM') origen = 'CALLAO';
-
-                    if(destino === 'TVS' || destino === 'LURIN') destino = 'LURÍN';
-                    if(destino === 'TVC' || destino === 'STA ANITA') destino = 'SANTA ANITA';
-                    if(destino === 'PUERTO APM') destino = 'CALLAO';
-
-                    let cOri = coordGeograficas[origen] || coordGeograficas['LIMA']; 
-                    let cDes = coordGeograficas[destino];
+                    let cOri = obtenerCoordenadaInteligente(origenStr);
+                    let cDes = obtenerCoordenadaInteligente(destinoStr);
 
                     if(cOri && cDes) {
-                        let uniqueKey = origen + '-' + destino;
+                        let uniqueKey = JSON.stringify(cOri) + '-' + JSON.stringify(cDes);
                         if(!trazadosVisuales.has(uniqueKey)) {
                             trazadosVisuales.add(uniqueKey);
                             
-                            let capOri = origen.replace(/\w\S*/g, w => (w.replace(/^\w/, c => c.toUpperCase())));
-                            let capDes = destino.replace(/\w\S*/g, w => (w.replace(/^\w/, c => c.toUpperCase())));
+                            let capOri = origenStr.replace(/\w\S*/g, w => (w.replace(/^\w/, c => c.toUpperCase())));
+                            let capDes = destinoStr.replace(/\w\S*/g, w => (w.replace(/^\w/, c => c.toUpperCase())));
 
                             L.circleMarker(cOri, { radius: 5, fillColor: "#1e293b", color: "#fff", weight: 2, fillOpacity: 1 })
                                 .bindPopup(`<div class="text-xs"><b>Origen:</b> ${capOri}</div>`).addTo(mapLayerGroup);
@@ -523,7 +532,7 @@
         }
 
         // ==========================================
-        // INICIALIZACIÓN
+        // INICIALIZACIÓN DE GRÁFICOS Y EVENTOS
         // ==========================================
         function inicializarGraficos() {
             const ctxMonthly = document.getElementById('monthlyChart').getContext('2d');
@@ -607,6 +616,7 @@
             Chart.register(ChartDataLabels);
             inicializarGraficos();
             initMap();
+            
             fetchRealSheetData();
             setInterval(fetchRealSheetData, 300000); // Auto Refresh cada 5 min
         };
