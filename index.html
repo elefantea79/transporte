@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -123,7 +124,7 @@
                 <div class="flex justify-between items-center mb-6">
                     <div>
                         <h3 class="font-extrabold text-slate-800 uppercase tracking-tight text-sm">Análisis Comparativo Mensual</h3>
-                        <p class="text-[10px] text-slate-500 font-medium">Valores en miles (k) | Mostrando meses seleccionados</p>
+                        <p class="text-[10px] text-slate-500 font-medium">Valores en miles (k) | Solo meses con registros activos</p>
                     </div>
                     <div class="hidden md:flex gap-3 text-[9px] font-black uppercase">
                         <div class="flex items-center gap-1"><span class="w-2 h-2 bg-slate-200 rounded-sm"></span> Cotización</div>
@@ -292,7 +293,7 @@
             badge.className = "bg-blue-500/20 text-blue-400 text-[10px] px-2 py-1 rounded-full font-bold border border-blue-500/30 transition-all";
             
             try {
-                const[res2026, res2025] = await Promise.all([
+                const [res2026, res2025] = await Promise.all([
                     fetch(url2026 + '&t=' + new Date().getTime()), 
                     fetch(url2025 + '&t=' + new Date().getTime())
                 ]);
@@ -363,8 +364,8 @@
                     }
                 };
 
-                processCSV(csv2026, '2025');
-                processCSV(csv2025, '2026'); // El parser extrae los años reales internamente
+                processCSV(csv2026, '2026');
+                processCSV(csv2025, '2025');
 
                 googleSheetData = parsedData;
                 
@@ -436,9 +437,14 @@
             document.getElementById('kpi-confirmar').innerText = '$ ' + totalPorConfirmar.toLocaleString('en-US', {maximumFractionDigits:0});
             document.getElementById('kpi-anulado').innerText = '$ ' + totalAnulado.toLocaleString('en-US', {maximumFractionDigits:0});
 
-            // REGLA PARA EL GRÁFICO MENSUAL: Mostrar SIEMPRE los meses seleccionados, aunque no tengan datos
+            // REGLA PARA EL GRÁFICO MENSUAL: Mostrar SOLO meses con información activa
             if (monthlyChart) {
-                let mesesConDatos = [...selMonths].sort((a,b) => a - b);
+                let mesesConDatos = selMonths.filter(m => {
+                    return dataMensual[m] && (dataMensual[m].cotizacion > 0 || dataMensual[m].facturado > 0 || dataMensual[m].anulado > 0);
+                }).sort((a,b) => a - b);
+
+                // Si no hay datos, mostramos los seleccionados vacíos por defecto
+                if(mesesConDatos.length === 0) mesesConDatos = selMonths.sort((a,b)=>a-b);
 
                 monthlyChart.data.labels = mesesConDatos.map(m => monthNames[m]);
                 monthlyChart.data.datasets[0].data = mesesConDatos.map(m => dataMensual[m] ? (dataMensual[m].cotizacion / 1000) : 0);
@@ -593,7 +599,7 @@
                         }
                     },
                     scales: {
-                        y: { type: 'linear', display: true, position: 'left', max: 95000, grid: { borderDash:[4, 4] }, ticks: { font: { size: 9 }, callback: v => '$' + (v/1000) + 'k' } },
+                        y: { type: 'linear', display: true, position: 'left', max: 95000, grid: { borderDash: [4, 4] }, ticks: { font: { size: 9 }, callback: v => '$' + (v/1000) + 'k' } },
                         y1: { type: 'linear', display: true, position: 'right', max: 110, grid: { drawOnChartArea: false }, ticks: { font: { size: 9 }, callback: v => v + '%' } },
                         x: { grid: { display: false }, ticks: { font: { size: 9, weight: '800' } } }
                     }
