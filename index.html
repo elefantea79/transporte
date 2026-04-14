@@ -175,9 +175,13 @@
                     </table>
                 </div>
             </div>
+
             <!-- MAPA -->
             <div class="col-span-12 lg:col-span-5 kpi-card">
-                <h3 class="font-extrabold text-slate-800 mb-4 uppercase tracking-tight text-sm">Zonas de Operación Logística</h3>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-extrabold text-slate-800 uppercase tracking-tight text-sm">Rutas Logísticas Ejecutadas</h3>
+                    <span class="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded uppercase">Origen a Destino</span>
+                </div>
                 <div id="map"></div>
             </div>
         </div>
@@ -187,51 +191,64 @@
     <script>
         const monthNames =['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
         let monthlyChart, paretoChart;
+        let map, mapLayerGroup;
         window.viajesParetoData = {}; 
 
-        // 1. BASE DE DATOS ESTRUCTURADA COMO TU GOOGLE SHEET (Filas)
-        // He incluido los datos para que coincidan con la captura: Marzo (24.6k Ejecutado, 27.3k Por confirmar, 50.7k Anulado)
+        // ==========================================
+        // DICCIONARIO DE COORDENADAS (GEOLOCALIZACIÓN PERÚ)
+        // ==========================================
+        const coordGeograficas = {
+            "LURIN": [-12.277, -76.871],
+            "STA ANITA": [-12.043, -76.953],
+            "LIMA": [-12.046, -77.042],
+            "CALLAO": [-12.056, -77.118],
+            "CHALHUANCA": [-14.296, -73.253],
+            "JULIACA": [-15.489, -70.154],
+            "PASCO": [-10.684, -76.256],
+            "CUSCO":[-13.531, -71.967],
+            "AREQUIPA":[-16.409, -71.537],
+            "TRUJILLO":[-8.109, -79.021],
+            "LA OROYA":[-11.518, -75.899],
+            "HUAMACHUCO":[-7.812, -78.049],
+            "CHALA":[-15.866, -74.249],
+            "YAUCA":[-15.666, -74.526],
+            "ATE":[-12.028, -76.922]
+        };
+
+        // 1. BASE DE DATOS (MOCKUP) BASADA EN TUS HOJAS DE CÁLCULO
         const googleSheetData =[
             // --- ENERO 2026 ---
-            { year: '2026', month: 0, contratista: 'ELEFANTE', estado: 'FACTURADO', monto: 35200, fechaCotizacion: '2026-01-05', fechaFin: '2026-01-10', viajes: 15 },
-            { year: '2026', month: 0, contratista: 'PORTILLA', estado: 'ANULADO', monto: 21600, fechaCotizacion: '2026-01-08', fechaFin: '', viajes: 0 },
+            { year: '2026', month: 0, contratista: 'ELEFANTE', estado: 'FACTURADO', monto: 35200, fechaCotizacion: '2026-01-05', fechaFin: '2026-01-10', viajes: 15, ruta: 'TVC-TVS' },
+            { year: '2026', month: 0, contratista: 'PORTILLA', estado: 'ANULADO', monto: 21600, fechaCotizacion: '2026-01-08', fechaFin: '', viajes: 0, ruta: 'LURIN-CHALHUANCA' },
             
             // --- FEBRERO 2026 ---
-            { year: '2026', month: 1, contratista: 'ELEFANTE', estado: 'FACTURADO', monto: 40000, fechaCotizacion: '2026-02-05', fechaFin: '2026-02-10', viajes: 18 },
-            { year: '2026', month: 1, contratista: 'MECHE', estado: 'FACTURADO', monto: 23000, fechaCotizacion: '2026-02-06', fechaFin: '2026-02-11', viajes: 10 },
-            { year: '2026', month: 1, contratista: 'R&J', estado: 'ANULADO', monto: 56300, fechaCotizacion: '2026-02-08', fechaFin: '', viajes: 0 },
+            { year: '2026', month: 1, contratista: 'ELEFANTE', estado: 'FACTURADO', monto: 40000, fechaCotizacion: '2026-02-05', fechaFin: '2026-02-10', viajes: 18, ruta: 'LIMA-CUSCO' },
+            { year: '2026', month: 1, contratista: 'MECHE', estado: 'FACTURADO', monto: 23000, fechaCotizacion: '2026-02-06', fechaFin: '2026-02-11', viajes: 10, ruta: 'LIMA-AREQUIPA' },
+            { year: '2026', month: 1, contratista: 'R&J', estado: 'ANULADO', monto: 56300, fechaCotizacion: '2026-02-08', fechaFin: '', viajes: 0, ruta: 'STA ANITA-LURIN' },
 
             // --- MARZO 2026 ---
-            // Suma al Ejecutado = 14.6k
-            { year: '2026', month: 2, contratista: 'ELEFANTE', estado: 'FACTURADO', monto: 14600, fechaCotizacion: '2026-03-01', fechaFin: '2026-03-05', viajes: 7 },
-            // REGLA: "EN PROCESO" (Tiene Estado, tiene F. Cotización y tiene F. Fin). Suma al Ejecutado = 10k -> (Total Ejecutado Marzo = 24.6k)
-            { year: '2026', month: 2, contratista: 'MECHE', estado: 'En Proceso', monto: 10000, fechaCotizacion: '2026-03-02', fechaFin: '2026-03-06', viajes: 4 },
-            // REGLA: "POR CONFIRMAR" (Tiene Estado, tiene F. Cotización). -> Total Por Confirmar = 27.3k
-            { year: '2026', month: 2, contratista: 'HUERE', estado: 'Por confirmar', monto: 27300, fechaCotizacion: '2026-03-10', fechaFin: '', viajes: 8 },
-            // REGLA: "ANULADO". -> Total Anulado = 50.7k
-            { year: '2026', month: 2, contratista: 'CRISTO M.', estado: 'ANULADO', monto: 50700, fechaCotizacion: '2026-03-12', fechaFin: '', viajes: 0 }
+            { year: '2026', month: 2, contratista: 'ELEFANTE', estado: 'FACTURADO', monto: 14600, fechaCotizacion: '2026-03-01', fechaFin: '2026-03-05', viajes: 7, ruta: 'LURIN-JULIACA' },
+            // REGLA: "EN PROCESO"
+            { year: '2026', month: 2, contratista: 'MECHE', estado: 'En Proceso', monto: 10000, fechaCotizacion: '2026-03-02', fechaFin: '2026-03-06', viajes: 4, ruta: 'PUERTO APM-TVC' },
+            // REGLA: "POR CONFIRMAR"
+            { year: '2026', month: 2, contratista: 'HUERE', estado: 'Por confirmar', monto: 27300, fechaCotizacion: '2026-03-10', fechaFin: '', viajes: 8, ruta: 'LURIN-TRUJILLO' },
+            // REGLA: "ANULADO"
+            { year: '2026', month: 2, contratista: 'CRISTO M.', estado: 'ANULADO', monto: 50700, fechaCotizacion: '2026-03-12', fechaFin: '', viajes: 0, ruta: 'LIMA-LA OROYA' }
         ];
 
-        // 2. FUNCIÓN PRINCIPAL QUE PROCESA TUS REGLAS DE NEGOCIO
+        // 2. FUNCIÓN PRINCIPAL DE PROCESAMIENTO (REGLAS DE NEGOCIO Y DIBUJO)
         function procesarDatos() {
-            // Leer filtros
             const selYears = Array.from(document.querySelectorAll('.year-cb:checked')).map(cb => cb.value);
             const selMonths = Array.from(document.querySelectorAll('.m-chk:checked')).map(cb => parseInt(cb.value));
 
-            // Variables acumuladoras globales
             let totalEjecutado = 0, totalPorConfirmar = 0, totalAnulado = 0;
-            
-            // Estructuras para los gráficos
-            let dataMensual = {}; 
-            let dataParetoMonto = {};
-            let dataParetoViajes = {};
+            let dataMensual = {}, dataParetoMonto = {}, dataParetoViajes = {};
+            let rutasEjecutadasMap = new Set(); // Guardará las rutas a dibujar
 
-            // Bucle principal (Filtra y aplica reglas a cada fila)
             googleSheetData.forEach(fila => {
-                // Si el año y mes de la fila están seleccionados en los filtros...
                 if (selYears.includes(fila.year) && selMonths.includes(fila.month)) {
                     
-                    // --- COMPROBACIÓN DE REGLAS ESTRICTAS DE NEGOCIO ---
+                    // VALIDACIÓN DE REGLAS DE NEGOCIO
                     const tieneFechaCot = fila.fechaCotizacion && fila.fechaCotizacion.trim() !== '';
                     const tieneFechaFin = fila.fechaFin && fila.fechaFin.trim() !== '';
 
@@ -240,12 +257,15 @@
                     const esFacturado = (fila.estado === 'FACTURADO');
                     const esAnulado = (fila.estado === 'ANULADO');
 
-                    // --- ACUMULAR MONTOS PARA KPIs ---
+                    // ACUMULAR PARA KPIs
                     let montoEjecutado = 0, montoPorConfirmar = 0, montoAnulado = 0;
 
                     if (esFacturado || esEnProceso) {
                         montoEjecutado = fila.monto;
                         totalEjecutado += montoEjecutado;
+                        
+                        // Añadimos a rutas del mapa solo si está "Ejecutado" o "En Proceso"
+                        if(fila.ruta) rutasEjecutadasMap.add(fila.ruta);
                     }
                     if (esPorConfirmar) {
                         montoPorConfirmar = fila.monto;
@@ -256,14 +276,13 @@
                         totalAnulado += montoAnulado;
                     }
 
-                    // --- ACUMULAR PARA GRÁFICO MENSUAL ---
+                    // ACUMULAR PARA MENSUAL
                     if (!dataMensual[fila.month]) dataMensual[fila.month] = { cotizacion: 0, facturado: 0, anulado: 0 };
-                    // Cotización total = Todo lo Ejecutado + Todo lo Por Confirmar
                     dataMensual[fila.month].cotizacion += (montoEjecutado + montoPorConfirmar);
                     dataMensual[fila.month].facturado += montoEjecutado;
                     dataMensual[fila.month].anulado += montoAnulado;
 
-                    // --- ACUMULAR PARA GRÁFICO PARETO (Solo servicios válidos/ejecutados/en cotización) ---
+                    // ACUMULAR PARA PARETO
                     if (esFacturado || esEnProceso || esPorConfirmar) {
                         dataParetoMonto[fila.contratista] = (dataParetoMonto[fila.contratista] || 0) + fila.monto;
                         dataParetoViajes[fila.contratista] = (dataParetoViajes[fila.contratista] || 0) + fila.viajes;
@@ -271,47 +290,31 @@
                 }
             });
 
-            // 3. ACTUALIZAR LAS 4 TARJETAS HTML (KPIs)
-            const totalCotizaciones = totalEjecutado + totalPorConfirmar;
-            document.getElementById('kpi-cotizaciones').innerText = '$ ' + totalCotizaciones.toLocaleString('en-US', {maximumFractionDigits:0});
+            // 3. ACTUALIZAR KPIs
+            document.getElementById('kpi-cotizaciones').innerText = '$ ' + (totalEjecutado + totalPorConfirmar).toLocaleString('en-US', {maximumFractionDigits:0});
             document.getElementById('kpi-ejecutado').innerText = '$ ' + totalEjecutado.toLocaleString('en-US', {maximumFractionDigits:0});
             document.getElementById('kpi-confirmar').innerText = '$ ' + totalPorConfirmar.toLocaleString('en-US', {maximumFractionDigits:0});
             document.getElementById('kpi-anulado').innerText = '$ ' + totalAnulado.toLocaleString('en-US', {maximumFractionDigits:0});
 
-            // 4. ACTUALIZAR GRÁFICO MENSUAL
+            // 4. ACTUALIZAR GRÁFICOS
             if (monthlyChart) {
-                // Ordenar meses seleccionados (ej: Enero, Febrero, Marzo)
                 const mesesOrdenados = selMonths.sort((a,b) => a - b);
-                
-                const labels = mesesOrdenados.map(m => monthNames[m]);
-                const dCot = mesesOrdenados.map(m => dataMensual[m] ? (dataMensual[m].cotizacion / 1000) : 0);
-                const dFact = mesesOrdenados.map(m => dataMensual[m] ? (dataMensual[m].facturado / 1000) : 0);
-                const dAnul = mesesOrdenados.map(m => dataMensual[m] ? (dataMensual[m].anulado / 1000) : 0);
-
-                monthlyChart.data.labels = labels;
-                monthlyChart.data.datasets[0].data = dCot;
-                monthlyChart.data.datasets[1].data = dFact;
-                monthlyChart.data.datasets[2].data = dAnul;
-                monthlyChart.data.datasets[3].data = dCot; // La línea curvada sigue la cotización
+                monthlyChart.data.labels = mesesOrdenados.map(m => monthNames[m]);
+                monthlyChart.data.datasets[0].data = mesesOrdenados.map(m => dataMensual[m] ? (dataMensual[m].cotizacion / 1000) : 0);
+                monthlyChart.data.datasets[1].data = mesesOrdenados.map(m => dataMensual[m] ? (dataMensual[m].facturado / 1000) : 0);
+                monthlyChart.data.datasets[2].data = mesesOrdenados.map(m => dataMensual[m] ? (dataMensual[m].anulado / 1000) : 0);
+                monthlyChart.data.datasets[3].data = monthlyChart.data.datasets[0].data; 
                 monthlyChart.update();
             }
 
-            // 5. ACTUALIZAR GRÁFICO DE PARETO
             if (paretoChart) {
-                // Transformar el objeto en array para ordenarlo de mayor a menor
                 let arrayPareto = Object.keys(dataParetoMonto).map(k => ({
-                    contratista: k, 
-                    monto: dataParetoMonto[k], 
-                    viajes: dataParetoViajes[k] 
+                    contratista: k, monto: dataParetoMonto[k], viajes: dataParetoViajes[k] 
                 })).sort((a, b) => b.monto - a.monto);
 
-                const pLabels = arrayPareto.map(item => item.contratista);
                 const pMontos = arrayPareto.map(item => item.monto);
-                
-                // Guardar viajes globalmente para poder leerlos en el Tooltip (Al pasar el ratón)
                 window.viajesParetoData = arrayPareto.map(item => item.viajes);
 
-                // Calcular Porcentaje Acumulado de la Línea Roja
                 const sumTotalPareto = pMontos.reduce((a,b) => a + b, 0);
                 let acumulado = 0;
                 const pPorcentajes = pMontos.map(monto => {
@@ -319,24 +322,82 @@
                     return sumTotalPareto > 0 ? ((acumulado / sumTotalPareto) * 100).toFixed(1) : 0;
                 });
 
-                paretoChart.data.labels = pLabels;
-                paretoChart.data.datasets[1].data = pMontos;     // Las barras azules
-                paretoChart.data.datasets[0].data = pPorcentajes; // La línea roja
+                paretoChart.data.labels = arrayPareto.map(item => item.contratista);
+                paretoChart.data.datasets[1].data = pMontos;     
+                paretoChart.data.datasets[0].data = pPorcentajes; 
                 paretoChart.update();
+            }
+
+            // 5. ACTUALIZAR MAPA (Rutas Ejecutadas Dinámicas)
+            dibujarRutasMapa(Array.from(rutasEjecutadasMap));
+        }
+
+        // ==========================================
+        // DIBUJO DINÁMICO EN EL MAPA LEAFLET
+        // ==========================================
+        function dibujarRutasMapa(rutas) {
+            if(!map) return;
+            mapLayerGroup.clearLayers();
+
+            let trazadosVisuales = new Set();
+
+            rutas.forEach(rutaDesc => {
+                let partes = rutaDesc.toUpperCase().split('-');
+                if(partes.length >= 2) {
+                    let origen = partes[0].trim();
+                    let destino = partes[1].trim();
+
+                    // TRADUCTOR DE JERGA DE VOLVO
+                    if(origen === 'TVS') origen = 'LURIN';
+                    if(origen === 'TVC') origen = 'STA ANITA';
+                    if(origen === 'PUERTO APM') origen = 'CALLAO';
+                    
+                    if(destino === 'TVS') destino = 'LURIN';
+                    if(destino === 'TVC') destino = 'STA ANITA';
+                    if(destino === 'PUERTO APM') destino = 'CALLAO';
+
+                    let cOri = coordGeograficas[origen] || coordGeograficas['LIMA']; // Fallback a Lima
+                    let cDes = coordGeograficas[destino];
+
+                    if(cOri && cDes) {
+                        let uniqueKey = origen + '-' + destino;
+                        if(!trazadosVisuales.has(uniqueKey)) {
+                            trazadosVisuales.add(uniqueKey);
+
+                            // Punto Origen (Gris Oscuro)
+                            L.circleMarker(cOri, { radius: 5, fillColor: "#1e293b", color: "#fff", weight: 2, fillOpacity: 1 })
+                                .bindPopup(`<div class="text-xs"><b>Origen:</b> ${origen}</div>`)
+                                .addTo(mapLayerGroup);
+                            
+                            // Punto Destino (Azul)
+                            L.circleMarker(cDes, { radius: 5, fillColor: "#3b82f6", color: "#fff", weight: 2, fillOpacity: 1 })
+                                .bindPopup(`<div class="text-xs"><b>Destino:</b> ${destino}</div>`)
+                                .addTo(mapLayerGroup);
+
+                            // Línea de Ruta (Punteada Azul)
+                            L.polyline([cOri, cDes], { color: '#3b82f6', weight: 2, opacity: 0.7, dashArray: '6, 6' })
+                                .addTo(mapLayerGroup);
+                        }
+                    }
+                }
+            });
+
+            // Auto-Ajustar zoom para ver todas las rutas trazadas
+            if(mapLayerGroup.getLayers().length > 0) {
+                map.fitBounds(mapLayerGroup.getBounds().pad(0.2));
+            } else {
+                map.setView([-9.19, -75.01], 5); // Vista Perú por defecto si no hay data
             }
         }
 
         // ==========================================
-        // INICIALIZACIÓN DE LOS GRÁFICOS Y MAPA
+        // INICIALIZACIÓN (GRÁFICOS, MAPA Y EVENTOS)
         // ==========================================
-        Chart.register(ChartDataLabels);
-
         function inicializarGraficos() {
-            // Configuración del Gráfico Mensual
             const ctxMonthly = document.getElementById('monthlyChart').getContext('2d');
             monthlyChart = new Chart(ctxMonthly, {
                 type: 'bar',
-                data: { labels: [], datasets: [
+                data: { labels:[], datasets: [
                     { label: 'Cotización', data: [], backgroundColor: '#e2e8f0', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8 },
                     { label: 'Facturado', data:[], backgroundColor: '#2563eb', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8 },
                     { label: 'Anulado', data:[], backgroundColor: '#f87171', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8 },
@@ -351,7 +412,6 @@
                             formatter: (value, context) => {
                                 if (context.dataset.type === 'line' || value === 0) return null;
                                 let label = value.toFixed(1) + 'k';
-                                // Si es la barra roja de anulado, calcula su % frente a la cotización (gris)
                                 if (context.dataset.label === 'Anulado') {
                                     const coti = context.chart.data.datasets[0].data[context.dataIndex];
                                     if(coti > 0) return `${label}\n(${((value / coti) * 100).toFixed(1)}%)`;
@@ -368,7 +428,6 @@
                 }
             });
 
-            // Configuración del Gráfico de Pareto
             const ctxPareto = document.getElementById('paretoChart').getContext('2d');
             paretoChart = new Chart(ctxPareto, {
                 type: 'bar',
@@ -385,11 +444,9 @@
                             callbacks: {
                                 label: function(context) {
                                     if (context.dataset.type === 'line') return `Acumulado: ${context.raw}%`;
-                                    
                                     const idx = context.dataIndex;
                                     const sumBarrasAzules = context.chart.data.datasets[1].data.reduce((a,b)=>a+b, 0);
                                     const representacion = sumBarrasAzules > 0 ? ((context.raw / sumBarrasAzules) * 100).toFixed(1) : 0;
-                                    
                                     return[
                                         `Monto: $${context.raw.toLocaleString()}`,
                                         `Viajes Realizados: ${window.viajesParetoData[idx]}`,
@@ -406,28 +463,16 @@
                     }
                 }
             });
-
-            // Disparar el primer procesamiento para llenar todo apenas carga la web
-            procesarDatos();
         }
 
         function initMap() {
-            const map = L.map('map', { zoomControl: false });
+            map = L.map('map', { zoomControl: true }).setView([-9.19, -75.01], 5);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
-            const locations =[
-                { name: "Lima / Lurin", coords: [-12.046, -77.042], type: 'base' },
-                { name: "Pasco", coords:[-10.684, -76.256] },
-                { name: "Huamachuco", coords:[-7.812, -78.049] },
-                { name: "Nasca", coords:[-14.835, -74.932] }
-            ];
-            const markerGroup = L.featureGroup();
-            locations.forEach(loc => {
-                const marker = L.circleMarker(loc.coords, {
-                    radius: loc.type === 'base' ? 8 : 6, fillColor: loc.type === 'base' ? "#1e293b" : "#3b82f6", color: "#fff", weight: 2, fillOpacity: 1
-                }).addTo(map);
-                markerGroup.addLayer(marker);
-            });
-            map.fitBounds(markerGroup.getBounds().pad(0.3));
+            // Creamos un grupo donde guardaremos las líneas/marcadores para poder limpiarlos dinámicamente
+            mapLayerGroup = L.featureGroup().addTo(map); 
+            
+            // Disparar procesamiento final (Dibuja los gráficos y el mapa)
+            procesarDatos();
         }
 
         window.onload = function() {
@@ -435,9 +480,7 @@
             initMap();
         };
 
-        // ==========================================
-        // UTILIDADES DE INTERFAZ (MENÚS Y TABLA)
-        // ==========================================
+        // UI de los Menús
         document.addEventListener('click', function(event) {
             if (!event.target.closest('.dropdown-container')) {
                 document.getElementById('yearDrop').classList.add('hidden');
@@ -447,9 +490,10 @@
 
         function toggleAllMonths(source) {
             document.querySelectorAll('.m-chk').forEach(c => c.checked = source.checked);
-            procesarDatos(); // Al marcar/desmarcar todos, se actualiza el tablero
+            procesarDatos();
         }
 
+        // Ordenar Tabla HTML (Estática)
         function sortTable(n) {
             var table = document.getElementById("tarifasTable"), rows, switching = true, i, x, y, shouldSwitch, dir = "asc", switchcount = 0;
             while (switching) {
