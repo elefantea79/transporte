@@ -34,11 +34,11 @@
             <div class="relative z-50 p-6 md:p-8">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                     <div>
-                        <h1 class="text-3xl font-extrabold tracking-tight">Consolidado Dinámico</h1>
+                        <h1 class="text-3xl font-extrabold tracking-tight">Consolidado Dinámico 2026</h1>
                         <p class="text-slate-400 font-medium flex items-center gap-2">
                             Conectado en Vivo a Google Sheets 
                             <span id="last-update" class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded-full font-bold border border-emerald-500/30 transition-all">
-                                Descargando datos...
+                                Conectando...
                             </span>
                         </p>
                     </div>
@@ -77,18 +77,19 @@
                                     </label>
                                 </div>
                                 <div class="p-2 max-h-60 overflow-y-auto style-scrollbar space-y-1">
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="0" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Enero</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="1" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Febrero</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="2" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Marzo</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="3" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Abril</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="4" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Mayo</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="5" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Junio</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="6" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Julio</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="7" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Agosto</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="8" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Septiembre</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="9" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Octubre</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="10" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Noviembre</span></label>
-                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="11" class="m-chk w-4 h-4 text-blue-600" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Diciembre</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="0" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Enero</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="1" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Febrero</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="2" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Marzo</span></label>
+                                    <!-- ABRIL AHORA ESTÁ MARCADO POR DEFECTO -->
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" checked value="3" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Abril</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="4" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Mayo</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="5" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Junio</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="6" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Julio</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="7" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Agosto</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="8" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Septiembre</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="9" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Octubre</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="10" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Noviembre</span></label>
+                                    <label class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer"><input type="checkbox" value="11" class="m-chk w-4 h-4 text-blue-600 rounded" onchange="procesarDatos()"><span class="text-sm font-semibold text-slate-600">Diciembre</span></label>
                                 </div>
                             </div>
                         </div>
@@ -123,7 +124,7 @@
                 <div class="flex justify-between items-center mb-6">
                     <div>
                         <h3 class="font-extrabold text-slate-800 uppercase tracking-tight text-sm">Análisis Comparativo Mensual</h3>
-                        <p class="text-[10px] text-slate-500 font-medium">Valores en miles (k) | Solo meses con registros activos</p>
+                        <p class="text-[10px] text-slate-500 font-medium">Valores en miles (k) | Peso % del anulado vs Cotizaciones</p>
                     </div>
                     <div class="hidden md:flex gap-3 text-[9px] font-black uppercase">
                         <div class="flex items-center gap-1"><span class="w-2 h-2 bg-slate-200 rounded-sm"></span> Cotización</div>
@@ -181,12 +182,54 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
-                            <tr><td class="p-3">Santa Anita - Lurín</td><td class="p-3">EC380DL</td><td class="p-3 text-center text-slate-500">40 km</td><td class="p-3 text-right">$ 660</td><td class="p-3 text-right font-bold">$ 710</td><td class="p-3 text-center font-bold text-emerald-600">+7.5%</td></tr>
-                            <tr><td class="p-3">Lima - Cusco</td><td class="p-3">L958F</td><td class="p-3 text-center text-slate-500">1,100 km</td><td class="p-3 text-right">$ 4,400</td><td class="p-3 text-right font-bold">$ 4,650</td><td class="p-3 text-center font-bold text-emerald-600">+5.7%</td></tr>
-                            <tr><td class="p-3">Lima - Juliaca</td><td class="p-3">L150H</td><td class="p-3 text-center text-slate-500">1,250 km</td><td class="p-3 text-right">$ 5,100</td><td class="p-3 text-right font-bold">$ 5,300</td><td class="p-3 text-center font-bold text-emerald-600">+3.9%</td></tr>
-                            <tr><td class="p-3">Lurín - Oroya</td><td class="p-3">SDLG L958F</td><td class="p-3 text-center text-slate-500">200 km</td><td class="p-3 text-right">$ 1,850</td><td class="p-3 text-right font-bold">$ 1,980</td><td class="p-3 text-center font-bold text-emerald-600">+7.0%</td></tr>
-                            <tr><td class="p-3">Lurín - Trujillo</td><td class="p-3">EC380DL</td><td class="p-3 text-center text-slate-500">580 km</td><td class="p-3 text-right">$ 3,352</td><td class="p-3 text-right font-bold">$ 3,600</td><td class="p-3 text-center font-bold text-emerald-600">+7.4%</td></tr>
-                            <tr><td class="p-3">Lurín - Apurímac</td><td class="p-3">EC380DL</td><td class="p-3 text-center text-slate-500">900 km</td><td class="p-3 text-right">$ 6,200</td><td class="p-3 text-right font-bold">$ 6,550</td><td class="p-3 text-center font-bold text-emerald-600">+5.6%</td></tr>
+                            <tr>
+                                <td class="p-3">Santa Anita - Lurín</td>
+                                <td class="p-3">EC380DL</td>
+                                <td class="p-3 text-center text-slate-500">40 km</td>
+                                <td class="p-3 text-right">$ 660</td>
+                                <td class="p-3 text-right font-bold">$ 710</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+7.5%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">Lima - Cusco</td>
+                                <td class="p-3">L958F</td>
+                                <td class="p-3 text-center text-slate-500">1,100 km</td>
+                                <td class="p-3 text-right">$ 4,400</td>
+                                <td class="p-3 text-right font-bold">$ 4,650</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+5.7%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">Lima - Juliaca</td>
+                                <td class="p-3">L150H</td>
+                                <td class="p-3 text-center text-slate-500">1,250 km</td>
+                                <td class="p-3 text-right">$ 5,100</td>
+                                <td class="p-3 text-right font-bold">$ 5,300</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+3.9%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">Lurín - Oroya</td>
+                                <td class="p-3">SDLG L958F</td>
+                                <td class="p-3 text-center text-slate-500">200 km</td>
+                                <td class="p-3 text-right">$ 1,850</td>
+                                <td class="p-3 text-right font-bold">$ 1,980</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+7.0%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">Lurín - Trujillo</td>
+                                <td class="p-3">EC380DL</td>
+                                <td class="p-3 text-center text-slate-500">580 km</td>
+                                <td class="p-3 text-right">$ 3,352</td>
+                                <td class="p-3 text-right font-bold">$ 3,600</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+7.4%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">Lurín - Apurímac</td>
+                                <td class="p-3">EC380DL</td>
+                                <td class="p-3 text-center text-slate-500">900 km</td>
+                                <td class="p-3 text-right">$ 6,200</td>
+                                <td class="p-3 text-right font-bold">$ 6,550</td>
+                                <td class="p-3 text-center font-bold text-emerald-600">+5.6%</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -203,6 +246,7 @@
         </div>
     </div>
 
+    <!-- SCRIPT DEL MOTOR DE PROCESAMIENTO Y CONEXIÓN A GOOGLE SHEETS -->
     <script>
         const monthNames =['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
         let monthlyChart, paretoChart;
@@ -210,182 +254,150 @@
         let googleSheetData =[]; 
         window.viajesParetoData = {}; 
 
-        // URLs CSV PUBLICADOS
-        const url2026 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8YV16DOopheo-MxtKHU-yAmTI1c8eR1LcT75y-51zj8KmEa5DTsdR9toFm93v-oc06v23kwG9qznD/pub?gid=1850210641&single=true&output=csv';
-        const url2025 = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8YV16DOopheo-MxtKHU-yAmTI1c8eR1LcT75y-51zj8KmEa5DTsdR9toFm93v-oc06v23kwG9qznD/pub?gid=1740143333&single=true&output=csv';
-
         // ==========================================
-        // DICCIONARIO AMPLIADO DE COORDENADAS 
+        // 1. DICCIONARIO DE COORDENADAS PARA EL MAPA
         // ==========================================
         const coordGeograficas = {
-            "LURÍN":[-12.277, -76.871], "LURIN":[-12.277, -76.871], "SANTA ANITA":[-12.043, -76.953], "STA ANITA":[-12.043, -76.953],
-            "LIMA":[-12.046, -77.042], "CALLAO":[-12.056, -77.118], "APM":[-12.056, -77.118],
+            "LURÍN":[-12.277, -76.871], "SANTA ANITA":[-12.043, -76.953], "LIMA":[-12.046, -77.042], "CALLAO":[-12.056, -77.118],
             "CHALHUANCA":[-14.296, -73.253], "JULIACA":[-15.489, -70.154], "PASCO":[-10.684, -76.256], "CUSCO":[-13.531, -71.967],
-            "AREQUIPA":[-16.409, -71.537], "AQP":[-16.409, -71.537], "TRUJILLO":[-8.109, -79.021], "LA OROYA":[-11.518, -75.899], "OROYA":[-11.518, -75.899],
-            "HUAMACHUCO":[-7.812, -78.049], "CHALA":[-15.866, -74.249], "YAUCA":[-15.666, -74.526], "ATE":[-12.028, -76.922],
-            "VMT":[-12.162, -76.943], "PACHACAMAC":[-12.228, -76.858], "MOYOBAMBA":[-6.034, -76.972], "CHICLAYO":[-6.771, -79.840],
-            "ILO":[-17.644, -71.339], "ABANCAY":[-13.633, -72.881], "PIURA":[-5.194, -80.632], "NAZCA":[-14.835, -74.932],
-            "NASCA":[-14.835, -74.932], "MARCONA":[-15.358, -75.163], "CHILCA":[-12.521, -76.737], "PISCO":[-13.715, -76.204],
-            "ICA":[-14.067, -75.728], "TACNA":[-18.014, -70.251], "TARMA":[-11.418, -75.688], "SAN DAMIAN":[-12.016, -76.393],
-            "SECOCHA":[-15.969, -73.181], "HUACHIPA":[-12.008, -76.901], "JAEN":[-5.708, -78.807], "CAJAMARCA":[-7.161, -78.512],
-            "HUARAZ":[-9.529, -77.528], "SHOUGANG":[-15.263, -75.251]
+            "AREQUIPA":[-16.409, -71.537], "TRUJILLO":[-8.109, -79.021], "LA OROYA":[-11.518, -75.899], "HUAMACHUCO":[-7.812, -78.049],
+            "CHALA":[-15.866, -74.249], "YAUCA":[-15.666, -74.526], "ATE":[-12.028, -76.922], "VMT":[-12.162, -76.943], "PACHACAMAC":[-12.228, -76.858],
+            "MOYOBAMBA":[-6.034, -76.972], "CHICLAYO":[-6.771, -79.840], "ILO":[-17.644, -71.339]
         };
 
-        // PARSER NATIVO DE CSV
-        function csvToArray(strData) {
-            let objPattern = new RegExp(("(\\,|\\r?\\n|\\r|^)(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|([^\"\\,\\r\\n]*))"), "gi");
-            let arrData = [[]]; let arrMatches = null;
-            while (arrMatches = objPattern.exec(strData)) {
-                let strMatchedDelimiter = arrMatches[1];
-                if (strMatchedDelimiter.length && strMatchedDelimiter !== ",") arrData.push([]);
-                let strMatchedValue;
-                if (arrMatches[2]) strMatchedValue = arrMatches[2].replace(new RegExp("\"\"", "g"), "\"");
-                else strMatchedValue = arrMatches[3];
-                arrData[arrData.length - 1].push(strMatchedValue);
-            }
-            if(arrData.length > 0 && arrData[arrData.length-1].length === 1 && arrData[arrData.length-1][0] === "") arrData.pop();
-            return arrData;
-        }
+        // ==========================================
+        // 2. CONEXIÓN EN VIVO A GOOGLE SHEETS (API GVIZ)
+        // ==========================================
+        const SHEET_ID = '1l9mtpMKH7gkkvILKUY9lYLK4PXh_bzpCidW7mGxnyro';
+        const SHEET_NAME = 'COTIZACION 2026';
 
-        // LIMPIADOR DE MONTOS ROBUSTO
-        function parseAmount(str) {
-            if (!str) return 0;
-            str = String(str).trim();
-            if (!str) return 0;
+        function parseAmount(cell) {
+            if (!cell) return 0;
+            // Capturar la estructura v o f
+            let strToParse = String(cell.v !== null && cell.v !== undefined ? cell.v : (cell.f || ''));
+            let val = parseFloat(strToParse.replace(/[^\d.-]/g, '')) || 0;
             
-            let isSoles = str.toUpperCase().includes('S/') || str.toUpperCase().includes('S.');
-            str = str.replace(/[^\d.,-]/g, '');
-            if (!str) return 0;
-            
-            let lastComma = str.lastIndexOf(',');
-            let lastDot = str.lastIndexOf('.');
-            
-            if (lastComma > lastDot) str = str.replace(/\./g, '').replace(',', '.');
-            else if (lastDot > lastComma) str = str.replace(/,/g, '');
-            else if (lastComma !== -1 && lastDot === -1) str = str.replace(',', '.');
-            
-            let val = parseFloat(str) || 0;
-            if (isSoles) val = val / 3.35;
+            let formatStr = String(cell.f || cell.v || '').toUpperCase();
+            if (formatStr.includes('S/') || formatStr.includes('S.')) val = val / 3.35; 
             return val;
         }
 
-        // LECTOR DE FECHAS ROBUSTO
-        function extractDate(str) {
-            if (!str) return null;
-            str = String(str).trim();
-            if (!str) return null;
+        function extractDate(cell) {
+            if(!cell) return null;
+            const v = cell.v;
+            if(v && typeof v === 'string' && v.startsWith('Date(')) {
+                const parts = v.match(/Date\((\d+),\s*(\d+),\s*(\d+)/);
+                if (parts) return new Date(parts[1], parts[2], parts[3]);
+            }
+            const str = String(cell.f || cell.v || '').trim();
             const parts = str.split(/[-/]/);
-            if (parts.length >= 3) {
-                const p0 = parseInt(parts[0], 10);
-                const p1 = parseInt(parts[1], 10);
-                const p2 = parseInt(parts[2].substring(0,4), 10);
-                if (String(p2).length === 4) return new Date(p2, p1 - 1, p0);
-                if (String(p0).length === 4) return new Date(p0, p1 - 1, p2);
+            if(parts.length >= 3) {
+                if(parts[2].length === 4) return new Date(parts[2], parts[1]-1, parts[0]);
+                if(parts[0].length === 4) return new Date(parts[0], parts[1]-1, parts[2]);
             }
             return null;
         }
 
-        // DESCARGA Y PROCESAMIENTO INICIAL (ELIMINA FILAS BASURA)
         async function fetchRealSheetData() {
             const badge = document.getElementById('last-update');
-            badge.innerText = `Descargando...`;
-            badge.className = "bg-blue-500/20 text-blue-400 text-[10px] px-2 py-1 rounded-full font-bold border border-blue-500/30 transition-all";
+            badge.innerText = `Sincronizando...`;
+            badge.className = "bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded-full font-bold border border-emerald-500/30";
             
             try {
-                const [res2026, res2025] = await Promise.all([
-                    fetch(url2026 + '&t=' + new Date().getTime()), 
-                    fetch(url2025 + '&t=' + new Date().getTime())
-                ]);
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+                const res = await fetch(url);
+                const text = await res.text();
+                const jsonString = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\)/)[1];
+                const data = JSON.parse(jsonString);
+
+                // --- BÚSQUEDA A PRUEBA DE BALAS DE ENCABEZADOS ---
+                // Eliminamos espacios y saltos de linea para que coincida exacto
+                let actualHeaders = data.table.cols.map(c => c && c.label ? String(c.label).replace(/[\s\n]+/g, '').toUpperCase() : '');
                 
-                const csv2026 = await res2026.text();
-                const csv2025 = await res2025.text();
+                let startRow = 0;
+                // Si la API no detectó encabezados, buscamos en la fila 0
+                if (actualHeaders.filter(h => h).length < 3 && data.table.rows.length > 0) {
+                    actualHeaders = data.table.rows[0].c.map(cell => cell && cell.v ? String(cell.v).replace(/[\s\n]+/g, '').toUpperCase() : '');
+                    startRow = 1;
+                }
+
+                // Función auxiliar que busca palabras clave en los encabezados limpios
+                const findCol = (keywords) => actualHeaders.findIndex(h => keywords.some(k => h.includes(k)));
+                
+                const iFechaCot = findCol(['FECHACOT', 'FECHACOTI']);
+                const iEstado = findCol(['ESTADO']);
+                const iFechaFin = findCol(['FECHAFIN']);
+                const iDestino2 = findCol(['DESTINO_2', 'DESTINO2']);
+                const iDestino = findCol(['DESTINO']);
+                const iFlete = findCol(['FLETE']);
+                const iEscolta = findCol(['ESCOLTA']);
+                const iContratista = findCol(['RAZONSOCIAL', 'TRANSPORTE', 'CONTRATISTA']);
+
+                const finalDestinoIdx = iDestino2 !== -1 ? iDestino2 : iDestino;
 
                 let parsedData =[];
 
-                const processCSV = (csvText, forceYear) => {
-                    const rows = csvToArray(csvText);
-                    if(rows.length < 2) return;
+                for (let i = startRow; i < data.table.rows.length; i++) {
+                    const row = data.table.rows[i];
+                    const getCell = (idx) => idx !== -1 ? row.c[idx] : null;
 
-                    let headerIdx = 0;
-                    for(let i=0; i<Math.min(10, rows.length); i++){
-                        const rowStr = rows[i].join('').toUpperCase();
-                        if(rowStr.includes('ESTADO') && rowStr.includes('FLETE')) {
-                            headerIdx = i; break;
-                        }
-                    }
+                    const cFechaCot = getCell(iFechaCot);
+                    const cFechaFin = getCell(iFechaFin);
+                    const cEstado = getCell(iEstado);
+                    const cDestino = getCell(finalDestinoIdx);
+                    const cFlete = getCell(iFlete);
+                    const cEscolta = getCell(iEscolta);
+                    const cContratista = getCell(iContratista);
 
-                    const headers = rows[headerIdx].map(h => h ? String(h).replace(/[\s\n]+/g, '').toUpperCase() : '');
-                    const findCol = (keywords) => headers.findIndex(h => keywords.some(k => h.includes(k)));
+                    const dateObj = extractDate(cFechaCot) || extractDate(cFechaFin);
                     
-                    const iFechaCot = findCol(['FECHACOT', 'FECHACOTI']);
-                    const iDestino = findCol(['DESTINO']);
-                    const iDestino2 = findCol(['DESTINO_2', 'DESTINO2']);
-                    const iFlete = findCol(['FLETE']);
-                    const iEscolta = findCol(['ESCOLTA']);
-                    const iContratista = findCol(['RAZONSOCIAL', 'TRANSPORTE', 'CONTRATISTA']);
-                    const iFechaFin = findCol(['FECHAFIN']);
-                    const iEstado = findCol(['ESTADO']);
-
-                    const finalDestinoIdx = (iDestino2 !== -1) ? iDestino2 : iDestino;
-
-                    for (let i = headerIdx + 1; i < rows.length; i++) {
-                        const row = rows[i];
-                        if(!row || row.length < 5) continue; 
-
-                        const getCell = (idx) => (idx !== -1 && idx < row.length) ? row[idx] : null;
-
-                        const cFechaCot = getCell(iFechaCot);
-                        const cFechaFin = getCell(iFechaFin);
-                        const cEstado = getCell(iEstado);
-                        const cDestino = getCell(finalDestinoIdx);
-                        const cFlete = getCell(iFlete);
-                        const cEscolta = getCell(iEscolta);
-                        const cContratista = getCell(iContratista);
-
-                        const dateObj = extractDate(cFechaCot) || extractDate(cFechaFin);
-                        
-                        // REGLA CLAVE PARA EVITAR LAS "1223 FILAS FANTASMAS":
-                        if (!dateObj || isNaN(dateObj.getTime())) continue;
-                        
+                    if (dateObj) {
                         let montoTotal = parseAmount(cFlete) + parseAmount(cEscolta);
-                        let estadoStr = cEstado ? String(cEstado).trim().toUpperCase() : '';
-                        let contratistaStr = cContratista ? String(cContratista).trim().toUpperCase() : 'ELEFANTE';
-                        let rutaStr = cDestino ? String(cDestino).trim().toUpperCase() : '';
+                        let estadoStr = cEstado && cEstado.v ? String(cEstado.v).trim().toUpperCase() : '';
+                        let contratistaStr = cContratista && cContratista.v ? String(cContratista.v).trim().toUpperCase() : 'ELEFANTE';
+                        let rutaStr = cDestino && cDestino.v ? String(cDestino.v).trim().toUpperCase() : '';
 
-                        let y = String(dateObj.getFullYear());
-                        let m = dateObj.getMonth(); 
+                        let tieneFechaCot = extractDate(cFechaCot) !== null;
+                        let tieneFechaFin = extractDate(cFechaFin) !== null;
 
                         parsedData.push({
-                            year: y, month: m, contratista: contratistaStr, estado: estadoStr,
-                            monto: montoTotal, tieneFechaCot: !!extractDate(cFechaCot), tieneFechaFin: !!extractDate(cFechaFin),
-                            viajes: 1, ruta: rutaStr
+                            year: String(dateObj.getFullYear()),
+                            month: dateObj.getMonth(),
+                            contratista: contratistaStr,
+                            estado: estadoStr,
+                            monto: montoTotal,
+                            tieneFechaCot: tieneFechaCot,
+                            tieneFechaFin: tieneFechaFin,
+                            viajes: 1, 
+                            ruta: rutaStr
                         });
                     }
-                };
-
-                processCSV(csv2026, '2026');
-                processCSV(csv2025, '2025');
+                }
 
                 googleSheetData = parsedData;
                 
                 const now = new Date();
                 const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
                 
-                badge.innerText = `Sincronizado: ${timeStr} (${parsedData.length} reg)`;
-                badge.className = "bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded-full font-bold border border-emerald-500/30 transition-all";
+                if(parsedData.length === 0) {
+                    badge.innerText = `Revisar Excel (0 filas lógicas)`;
+                    badge.className = "bg-amber-500/20 text-amber-500 text-[10px] px-2 py-1 rounded-full font-bold border border-amber-500/30";
+                } else {
+                    badge.innerText = `Actualizado: ${timeStr} (${parsedData.length} reg)`;
+                }
 
-                procesarDatos(); 
+                procesarDatos();
 
             } catch (error) {
                 console.error("Error al obtener datos:", error);
                 const badge = document.getElementById('last-update');
-                badge.innerText = `Error de Conexión HTTP`;
-                badge.className = "bg-red-500/20 text-red-400 text-[10px] px-2 py-1 rounded-full font-bold border border-red-500/30 transition-all";
+                badge.innerText = `Error de Conexión Google`;
+                badge.className = "bg-red-500/20 text-red-400 text-[10px] px-2 py-1 rounded-full font-bold border border-red-500/30";
             }
         }
 
         // ==========================================
-        // MOTOR LÓGICO DE PROCESAMIENTO Y GRÁFICOS
+        // 3. MOTOR DE REGLAS DE NEGOCIO Y GRÁFICOS
         // ==========================================
         function procesarDatos() {
             const selYears = Array.from(document.querySelectorAll('.year-cb:checked')).map(cb => cb.value);
@@ -398,6 +410,7 @@
             googleSheetData.forEach(fila => {
                 if (selYears.includes(fila.year) && selMonths.includes(fila.month)) {
                     
+                    // Lógica Flexible para evitar errores de tipeo
                     const esPorConfirmar = (fila.estado.includes('CONFIRMAR') && fila.tieneFechaCot);
                     const esEnProceso = (fila.estado.includes('PROCESO') && fila.tieneFechaCot && fila.tieneFechaFin);
                     const esFacturado = (fila.estado.includes('FACTURADO'));
@@ -436,19 +449,12 @@
             document.getElementById('kpi-confirmar').innerText = '$ ' + totalPorConfirmar.toLocaleString('en-US', {maximumFractionDigits:0});
             document.getElementById('kpi-anulado').innerText = '$ ' + totalAnulado.toLocaleString('en-US', {maximumFractionDigits:0});
 
-            // REGLA PARA EL GRÁFICO MENSUAL: Mostrar SOLO meses con información activa
             if (monthlyChart) {
-                let mesesConDatos = selMonths.filter(m => {
-                    return dataMensual[m] && (dataMensual[m].cotizacion > 0 || dataMensual[m].facturado > 0 || dataMensual[m].anulado > 0);
-                }).sort((a,b) => a - b);
-
-                // Si no hay datos, mostramos los seleccionados vacíos por defecto
-                if(mesesConDatos.length === 0) mesesConDatos = selMonths.sort((a,b)=>a-b);
-
-                monthlyChart.data.labels = mesesConDatos.map(m => monthNames[m]);
-                monthlyChart.data.datasets[0].data = mesesConDatos.map(m => dataMensual[m] ? (dataMensual[m].cotizacion / 1000) : 0);
-                monthlyChart.data.datasets[1].data = mesesConDatos.map(m => dataMensual[m] ? (dataMensual[m].facturado / 1000) : 0);
-                monthlyChart.data.datasets[2].data = mesesConDatos.map(m => dataMensual[m] ? (dataMensual[m].anulado / 1000) : 0);
+                const mesesOrdenados = selMonths.sort((a,b) => a - b);
+                monthlyChart.data.labels = mesesOrdenados.map(m => monthNames[m]);
+                monthlyChart.data.datasets[0].data = mesesOrdenados.map(m => dataMensual[m] ? (dataMensual[m].cotizacion / 1000) : 0);
+                monthlyChart.data.datasets[1].data = mesesOrdenados.map(m => dataMensual[m] ? (dataMensual[m].facturado / 1000) : 0);
+                monthlyChart.data.datasets[2].data = mesesOrdenados.map(m => dataMensual[m] ? (dataMensual[m].anulado / 1000) : 0);
                 monthlyChart.data.datasets[3].data = monthlyChart.data.datasets[0].data; 
                 monthlyChart.update();
             }
@@ -477,47 +483,37 @@
             dibujarRutasMapa(Array.from(rutasEjecutadasMap));
         }
 
-        function obtenerCoordenadaInteligente(nombreUbicacion) {
-            let nombreLimpio = nombreUbicacion.toUpperCase();
-            
-            // Estandarización base
-            if(nombreLimpio.includes('TVS')) nombreLimpio = 'LURÍN';
-            if(nombreLimpio.includes('TVC')) nombreLimpio = 'SANTA ANITA';
-            if(nombreLimpio.includes('APM')) nombreLimpio = 'CALLAO';
-
-            // Búsqueda inteligente
-            for (const key in coordGeograficas) {
-                if (nombreLimpio.includes(key)) return coordGeograficas[key];
-            }
-            return null; // Si no encuentra nada, no fuerza LIMA
-        }
-
         function dibujarRutasMapa(rutas) {
             if(!map) return;
             mapLayerGroup.clearLayers();
             let trazadosVisuales = new Set();
 
             rutas.forEach(rutaDesc => {
-                let partes = rutaDesc.split('-');
+                let partes = rutaDesc.toUpperCase().split('-');
                 if(partes.length >= 2) {
-                    let origenStr = partes[0].trim();
-                    let destinoStr = partes[1].trim();
+                    let origen = partes[0].trim();
+                    let destino = partes[1].trim();
 
-                    let cOri = obtenerCoordenadaInteligente(origenStr);
-                    let cDes = obtenerCoordenadaInteligente(destinoStr);
+                    // TRADUCTOR DE ABREVIATURAS
+                    if(origen === 'TVS' || origen === 'LURIN') origen = 'LURÍN';
+                    if(origen === 'TVC' || origen === 'STA ANITA') origen = 'SANTA ANITA';
+                    if(origen === 'PUERTO APM') origen = 'CALLAO';
+
+                    if(destino === 'TVS' || destino === 'LURIN') destino = 'LURÍN';
+                    if(destino === 'TVC' || destino === 'STA ANITA') destino = 'SANTA ANITA';
+                    if(destino === 'PUERTO APM') destino = 'CALLAO';
+
+                    let cOri = coordGeograficas[origen] || coordGeograficas['LIMA']; 
+                    let cDes = coordGeograficas[destino];
 
                     if(cOri && cDes) {
-                        let uniqueKey = JSON.stringify(cOri) + '-' + JSON.stringify(cDes);
+                        let uniqueKey = origen + '-' + destino;
                         if(!trazadosVisuales.has(uniqueKey)) {
                             trazadosVisuales.add(uniqueKey);
-                            
-                            let capOri = origenStr.replace(/\w\S*/g, w => (w.replace(/^\w/, c => c.toUpperCase())));
-                            let capDes = destinoStr.replace(/\w\S*/g, w => (w.replace(/^\w/, c => c.toUpperCase())));
-
                             L.circleMarker(cOri, { radius: 5, fillColor: "#1e293b", color: "#fff", weight: 2, fillOpacity: 1 })
-                                .bindPopup(`<div class="text-xs"><b>Origen:</b> ${capOri}</div>`).addTo(mapLayerGroup);
+                                .bindPopup(`<div class="text-xs"><b>Origen:</b> ${origen.charAt(0) + origen.slice(1).toLowerCase()}</div>`).addTo(mapLayerGroup);
                             L.circleMarker(cDes, { radius: 5, fillColor: "#3b82f6", color: "#fff", weight: 2, fillOpacity: 1 })
-                                .bindPopup(`<div class="text-xs"><b>Destino:</b> ${capDes}</div>`).addTo(mapLayerGroup);
+                                .bindPopup(`<div class="text-xs"><b>Destino:</b> ${destino.charAt(0) + destino.slice(1).toLowerCase()}</div>`).addTo(mapLayerGroup);
                             L.polyline([cOri, cDes], { color: '#3b82f6', weight: 2, opacity: 0.7, dashArray: '6, 6' }).addTo(mapLayerGroup);
                         }
                     }
@@ -532,7 +528,7 @@
         }
 
         // ==========================================
-        // INICIALIZACIÓN DE GRÁFICOS Y EVENTOS
+        // 4. INICIALIZACIÓN DE GRÁFICOS Y EVENTOS
         // ==========================================
         function inicializarGraficos() {
             const ctxMonthly = document.getElementById('monthlyChart').getContext('2d');
@@ -618,7 +614,8 @@
             initMap();
             
             fetchRealSheetData();
-            setInterval(fetchRealSheetData, 300000); // Auto Refresh cada 5 min
+            // Actualización automática cada 5 minutos (300000ms)
+            setInterval(fetchRealSheetData, 300000);
         };
 
         // Utilidades Menús/Tabla
